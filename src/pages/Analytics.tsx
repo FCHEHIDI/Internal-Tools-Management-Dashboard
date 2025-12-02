@@ -1,16 +1,112 @@
+import { TrendingUp, DollarSign, Users, BarChart3 } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui';
+import { CostChart } from '@/components/features/CostChart';
+import { DepartmentChart } from '@/components/features/DepartmentChart';
+import { UsageChart } from '@/components/features/UsageChart';
+
 export function Analytics() {
   return (
     <div className="space-y-8">
+      {/* Header */}
       <div>
         <h1 className="text-h1 font-bold text-foreground">Analytics</h1>
         <p className="text-foreground-secondary mt-2">
-          Insights and analytics for your tools
+          Insights and analytics for your tools usage and spending
         </p>
       </div>
 
-      <div className="bg-surface rounded-lg p-6 border border-border">
-        <p className="text-foreground-secondary">Analytics dashboard coming soon...</p>
+      {/* Quick Stats */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <Card className="p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-foreground-secondary">Total Monthly Spend</p>
+              <p className="text-2xl font-bold text-foreground mt-1">€28,750</p>
+              <p className="text-sm text-status-active mt-1 flex items-center gap-1">
+                <TrendingUp className="w-4 h-4" />
+                +12% from last month
+              </p>
+            </div>
+            <div className="w-12 h-12 rounded-lg bg-gradient-primary/10 flex items-center justify-center">
+              <DollarSign className="w-6 h-6 text-primary" />
+            </div>
+          </div>
+        </Card>
+
+        <Card className="p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-foreground-secondary">Average Cost per User</p>
+              <p className="text-2xl font-bold text-foreground mt-1">€156</p>
+              <p className="text-sm text-status-expiring mt-1 flex items-center gap-1">
+                <TrendingUp className="w-4 h-4" />
+                +6.8% from last month
+              </p>
+            </div>
+            <div className="w-12 h-12 rounded-lg bg-gradient-info/10 flex items-center justify-center">
+              <Users className="w-6 h-6 text-blue-500" />
+            </div>
+          </div>
+        </Card>
+
+        <Card className="p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-foreground-secondary">Tools Utilization</p>
+              <p className="text-2xl font-bold text-foreground mt-1">87%</p>
+              <p className="text-sm text-status-active mt-1 flex items-center gap-1">
+                <TrendingUp className="w-4 h-4" />
+                +3.2% from last month
+              </p>
+            </div>
+            <div className="w-12 h-12 rounded-lg bg-gradient-success/10 flex items-center justify-center">
+              <BarChart3 className="w-6 h-6 text-status-active" />
+            </div>
+          </div>
+        </Card>
       </div>
+
+      {/* Charts */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Cost Evolution */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Monthly Spend Evolution</CardTitle>
+            <p className="text-sm text-foreground-secondary mt-1">
+              Track your spending trends over time
+            </p>
+          </CardHeader>
+          <CardContent>
+            <CostChart />
+          </CardContent>
+        </Card>
+
+        {/* Department Breakdown */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Department Cost Breakdown</CardTitle>
+            <p className="text-sm text-foreground-secondary mt-1">
+              Cost distribution across departments
+            </p>
+          </CardHeader>
+          <CardContent>
+            <DepartmentChart />
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Usage Analytics */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Top Tools by Usage</CardTitle>
+          <p className="text-sm text-foreground-secondary mt-1">
+            Most actively used tools in your organization
+          </p>
+        </CardHeader>
+        <CardContent>
+          <UsageChart />
+        </CardContent>
+      </Card>
     </div>
   );
 }

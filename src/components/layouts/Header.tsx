@@ -1,6 +1,7 @@
 import { Link, useLocation } from 'react-router-dom';
 import { LayoutDashboard, Wrench, BarChart3, Settings } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { ThemeSwitcher } from '@/components/features/ThemeSwitcher';
 
 const navigation = [
   { name: 'Dashboard', href: '/', icon: LayoutDashboard },
@@ -50,6 +51,7 @@ export function Header() {
 
           {/* User Menu */}
           <div className="flex items-center gap-4">
+            <ThemeSwitcher />
             <button className="w-8 h-8 rounded-full bg-gradient-primary text-white flex items-center justify-center font-medium">
               FC
             </button>
