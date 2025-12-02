@@ -1,10 +1,59 @@
 import { Card, CardContent, CardHeader, CardTitle, Label, Badge } from '@/components/ui';
 import { useState } from 'react';
 
+/**
+ * ToolsFilters - Sidebar filter component for the tools catalog.
+ * 
+ * @component
+ * @returns {JSX.Element} Multi-category filter sidebar
+ * 
+ * @architecture Currently uses local state
+ * Production should integrate with:
+ * - Zustand store for global filter state
+ * - URL search params for shareable filtered views
+ * - TanStack Query for dynamic count updates
+ * 
+ * @filter-strategy
+ * - Status: Radio behavior (single selection, toggle off)
+ * - Department: Radio behavior (single selection, toggle off)
+ * - Category: Multi-select checkboxes (future)
+ * - Cost Range: Numeric range inputs
+ * 
+ * @ux-patterns
+ * - Counts next to options (transparency, prevent dead ends)
+ * - Active state highlighting (clear visual feedback)
+ * - Toggle behavior (click again to deselect)
+ * - Sticky sidebar (remains visible during scroll - future)
+ */
 export function ToolsFilters() {
+  /**
+   * Filter state: Currently single-select for status and department.
+   * 
+   * @state selectedStatus - Active status filter (or null for all)
+   * @state selectedDepartment - Active department filter (or null for all)
+   * 
+   * @production-enhancement
+   * Move to Zustand store:
+   * ```ts
+   * const { filters, setFilter } = useFilterStore();
+   * ```
+   */
   const [selectedStatus, setSelectedStatus] = useState<string | null>(null);
   const [selectedDepartment, setSelectedDepartment] = useState<string | null>(null);
 
+  /**
+   * Filter option arrays with counts.
+   * 
+   * @production Replace with:
+   * - API endpoint: GET /api/filters/counts
+   * - Updated dynamically based on active filters
+   * - Example: When "Engineering" selected, status counts show Engineering tools only
+   * 
+   * @data-structure Array of {value, label, count}
+   * - value: Internal identifier for filtering
+   * - label: User-facing display text
+   * - count: Number of tools matching this criteria
+   */
   const statuses = [
     { value: 'active', label: 'Active', count: 18 },
     { value: 'expiring', label: 'Expiring', count: 4 },
@@ -29,6 +78,12 @@ export function ToolsFilters() {
 
   return (
     <div className="space-y-6">
+      {/* 
+        Status Filter Card:
+        @pattern: Single-select with toggle-off capability
+        @visual: Button list with active state highlighting
+        @interaction: Click to select, click again to deselect (show all)
+      */}
       {/* Status Filter */}
       <Card>
         <CardHeader>
@@ -41,11 +96,17 @@ export function ToolsFilters() {
               onClick={() => setSelectedStatus(status.value === selectedStatus ? null : status.value)}
               className={`w-full flex items-center justify-between p-2 rounded-lg transition-colors ${
                 selectedStatus === status.value
-                  ? 'bg-primary/10 text-primary'
-                  : 'hover:bg-surface-hover'
+                  ? 'bg-primary/10 text-primary' // Active: Primary accent
+                  : 'hover:bg-surface-hover' // Hover: Subtle background
               }`}
             >
               <span className="text-sm font-medium">{status.label}</span>
+              {/* 
+                Count Badge:
+                @purpose: Shows available items for transparency
+                @ux-benefit: Prevents "empty result" frustration
+                @production: Update dynamically when other filters change
+              */}
               <Badge size="sm" variant="default">
                 {status.count}
               </Badge>

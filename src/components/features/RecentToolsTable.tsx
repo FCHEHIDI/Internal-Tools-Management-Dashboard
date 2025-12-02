@@ -3,6 +3,17 @@ import { Badge, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } 
 import { formatCurrency, formatDate } from '@/lib/utils';
 import { Tool } from '@/types';
 
+/**
+ * Mock data for recent tools display.
+ * 
+ * @production Replace with:
+ * - API: GET /api/tools?sortBy=updatedAt&order=desc&limit=8
+ * - TanStack Query: useQuery(['recent-tools'])
+ * - Real-time updates via WebSocket for collaborative environments
+ * 
+ * @type {Tool[]} - Follows the Tool interface from @/types
+ * @data-integrity Each tool has complete data including cost change tracking
+ */
 // Mock data - will be replaced with API data
 const mockTools: Tool[] = [
   {
@@ -135,6 +146,33 @@ const mockTools: Tool[] = [
   },
 ];
 
+/**
+ * RecentToolsTable - Dashboard table showing recently updated tools.
+ * 
+ * @component
+ * @returns {JSX.Element} Responsive table with 8 most recent tools
+ * 
+ * @purpose Dashboard quick overview
+ * Shows enough information for users to identify recent changes and take action
+ * 
+ * @features
+ * - Cost change indicators (percentage and trend direction)
+ * - Status badges with semantic colors
+ * - Sortable columns (visual indicators present)
+ * - Action buttons (view, edit, delete)
+ * - Responsive formatting using utility functions
+ * 
+ * @ux-decisions
+ * - Limited to 8 tools: Dashboard preview, not exhaustive list
+ * - Hover states: Indicates row interactivity
+ * - Right-aligned numbers: Easier to scan and compare values
+ * - Relative dates: "2 days ago" more meaningful than "2024-11-30"
+ * 
+ * @utility-usage
+ * - formatCurrency(): Consistent currency display (\u20ac1,250)
+ * - formatDate(): Relative time formatting ("2 days ago")
+ * - calculatePercentageChange(): Cost trend calculation
+ */
 export function RecentToolsTable() {
   return (
     <Table>
