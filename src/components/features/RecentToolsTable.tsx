@@ -1,4 +1,4 @@
-import { ArrowUpDown, MoreVertical, ExternalLink, Edit, Trash2 } from 'lucide-react';
+import { ArrowUpDown, MoreVertical, ExternalLink, Edit } from 'lucide-react';
 import { Badge, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui';
 import { formatCurrency, formatDate } from '@/lib/utils';
 import { Tool } from '@/types';
@@ -174,6 +174,28 @@ const mockTools: Tool[] = [
  * - calculatePercentageChange(): Cost trend calculation
  */
 export function RecentToolsTable() {
+  const handleViewDetails = (tool: Tool) => {
+    console.log('View details for:', tool.name);
+    // In production: navigate to tool details page
+    // window.location.href = `/tools/${tool.id}`;
+  };
+
+  const handleEdit = (tool: Tool) => {
+    console.log('Edit tool:', tool.name);
+    // In production: open edit modal or navigate to edit page
+    // setSelectedTool(tool);
+    // setIsEditModalOpen(true);
+  };
+
+  const handleMore = (tool: Tool) => {
+    console.log('More options for:', tool.name);
+    // In production: open dropdown menu with:
+    // - Duplicate
+    // - Archive
+    // - Delete
+    // - View History
+  };
+
   return (
     <Table>
       <TableHeader>
@@ -246,22 +268,25 @@ export function RecentToolsTable() {
             <TableCell className="text-right">
               <div className="flex items-center justify-end gap-2">
                 <button
+                  onClick={() => handleViewDetails(tool)}
                   className="p-2 hover:bg-surface-hover rounded-lg transition-colors"
                   title="View details"
                 >
-                  <ExternalLink className="w-4 h-4 text-foreground-secondary" />
+                  <ExternalLink className="w-4 h-4 text-foreground-secondary hover:text-primary" />
                 </button>
                 <button
+                  onClick={() => handleEdit(tool)}
                   className="p-2 hover:bg-surface-hover rounded-lg transition-colors"
                   title="Edit"
                 >
-                  <Edit className="w-4 h-4 text-foreground-secondary" />
+                  <Edit className="w-4 h-4 text-foreground-secondary hover:text-primary" />
                 </button>
                 <button
+                  onClick={() => handleMore(tool)}
                   className="p-2 hover:bg-surface-hover rounded-lg transition-colors"
                   title="More options"
                 >
-                  <MoreVertical className="w-4 h-4 text-foreground-secondary" />
+                  <MoreVertical className="w-4 h-4 text-foreground-secondary hover:text-primary" />
                 </button>
               </div>
             </TableCell>

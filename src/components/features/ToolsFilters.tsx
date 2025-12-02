@@ -1,5 +1,17 @@
 import { Card, CardContent, CardHeader, CardTitle, Label, Badge } from '@/components/ui';
-import { useState } from 'react';
+
+interface ToolsFiltersProps {
+  selectedFilters: {
+    categories: string[];
+    departments: string[];
+    status: string[];
+  };
+  onFilterChange: (filters: {
+    categories: string[];
+    departments: string[];
+    status: string[];
+  }) => void;
+}
 
 /**
  * ToolsFilters - Sidebar filter component for the tools catalog.
@@ -7,7 +19,7 @@ import { useState } from 'react';
  * @component
  * @returns {JSX.Element} Multi-category filter sidebar
  * 
- * @architecture Currently uses local state
+ * @architecture Currently uses controlled component pattern
  * Production should integrate with:
  * - Zustand store for global filter state
  * - URL search params for shareable filtered views
@@ -25,21 +37,36 @@ import { useState } from 'react';
  * - Toggle behavior (click again to deselect)
  * - Sticky sidebar (remains visible during scroll - future)
  */
-export function ToolsFilters() {
+export function ToolsFilters({ selectedFilters, onFilterChange }: ToolsFiltersProps) {
   /**
-   * Filter state: Currently single-select for status and department.
-   * 
-   * @state selectedStatus - Active status filter (or null for all)
-   * @state selectedDepartment - Active department filter (or null for all)
-   * 
-   * @production-enhancement
-   * Move to Zustand store:
-   * ```ts
-   * const { filters, setFilter } = useFilterStore();
-   * ```
+   * Toggle status filter
    */
-  const [selectedStatus, setSelectedStatus] = useState<string | null>(null);
-  const [selectedDepartment, setSelectedDepartment] = useState<string | null>(null);
+  const toggleStatus = (value: string) => {
+    const newStatus = selectedFilters.status.includes(value)
+      ? []
+      : [value];
+    onFilterChange({ ...selectedFilters, status: newStatus });
+  };
+
+  /**
+   * Toggle department filter
+   */
+  const toggleDepartment = (value: string) => {
+    const newDepartments = selectedFilters.departments.includes(value)
+      ? []
+      : [value];
+    onFilterChange({ ...selectedFilters, departments: newDepartments });
+  };
+
+  /**
+   * Toggle category filter
+   */
+  const toggleCategory = (value: string) => {
+    const newCategories = selectedFilters.categories.includes(value)
+      ? selectedFilters.categories.filter(c => c !== value)
+      : [...selectedFilters.categories, value];
+    onFilterChange({ ...selectedFilters, categories: newCategories });
+  };
 
   /**
    * Filter option arrays with counts.
@@ -93,9 +120,9 @@ export function ToolsFilters() {
           {statuses.map((status) => (
             <button
               key={status.value}
-              onClick={() => setSelectedStatus(status.value === selectedStatus ? null : status.value)}
+              onClick={() => toggleStatus(status.value)}
               className={`w-full flex items-center justify-between p-2 rounded-lg transition-colors ${
-                selectedStatus === status.value
+                selectedFilters.status.includes(status.value)
                   ? 'bg-primary/10 text-primary' // Active: Primary accent
                   : 'hover:bg-surface-hover' // Hover: Subtle background
               }`}
@@ -124,11 +151,9 @@ export function ToolsFilters() {
           {departments.map((dept) => (
             <button
               key={dept.value}
-              onClick={() =>
-                setSelectedDepartment(dept.value === selectedDepartment ? null : dept.value)
-              }
+              onClick={() => toggleDepartment(dept.value)}
               className={`w-full flex items-center justify-between p-2 rounded-lg transition-colors ${
-                selectedDepartment === dept.value
+                selectedFilters.departments.includes(dept.value)
                   ? 'bg-primary/10 text-primary'
                   : 'hover:bg-surface-hover'
               }`}
@@ -150,11 +175,16 @@ export function ToolsFilters() {
         <CardContent className="space-y-2">
           {categories.map((category) => (
             <button
+          {categories.map((category) => (
+            <button
               key={category.value}
-              className="w-full flex items-center justify-between p-2 rounded-lg hover:bg-surface-hover transition-colors"
-            >
-              <span className="text-sm font-medium">{category.label}</span>
-              <Badge size="sm" variant="default">
+              onClick={() => toggleCategory(category.value)}
+              className={`w-full flex items-center justify-between p-2 rounded-lg transition-colors ${
+                selectedFilters.categories.includes(category.value)
+                  ? 'bg-primary/10 text-primary'
+                  : 'hover:bg-surface-hover'
+              }`}
+            > <Badge size="sm" variant="default">
                 {category.count}
               </Badge>
             </button>

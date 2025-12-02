@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
 
 /**
@@ -9,21 +10,21 @@ import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recha
  * - Could include filters: date range, status (active only), etc.
  * 
  * @color-strategy
- * Each department has a semantic color from the design system:
- * - Engineering (primary): Main focus department
- * - Sales (success): Revenue-generating
- * - Marketing (warning): High-visibility spend
- * - Design (info): Creative/support
- * - Support (danger): Operational/critical
+ * Each department has a semantic color - lighter shades for dark mode readability
+ * - Engineering (blue): Main focus department
+ * - Sales (green): Revenue-generating
+ * - Marketing (orange): High-visibility spend
+ * - Design (purple): Creative/support
+ * - Support (pink): Operational/critical
  * 
  * @note Colors should be configurable per organization's needs
  */
 const data = [
-  { name: 'Engineering', value: 12500, color: 'hsl(var(--primary))' },
-  { name: 'Sales', value: 8200, color: 'hsl(var(--success))' },
-  { name: 'Marketing', value: 4800, color: 'hsl(var(--warning))' },
-  { name: 'Design', value: 2100, color: 'hsl(var(--info))' },
-  { name: 'Support', value: 1150, color: 'hsl(var(--danger))' },
+  { name: 'Engineering', value: 12500, color: '#60a5fa' }, // Light blue
+  { name: 'Sales', value: 8200, color: '#4ade80' }, // Light green
+  { name: 'Marketing', value: 4800, color: '#fb923c' }, // Light orange
+  { name: 'Design', value: 2100, color: '#a78bfa' }, // Light purple
+  { name: 'Support', value: 1150, color: '#f472b6' }, // Light pink
 ];
 
 /**
@@ -45,6 +46,21 @@ const data = [
  * - Part-to-whole relationships (department costs = total budget)
  */
 export function DepartmentChart() {
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
+
+  const onPieEnter = (_: unknown, index: number) => {
+    setActiveIndex(index);
+  };
+
+  const onPieLeave = () => {
+    setActiveIndex(null);
+  };
+
+  const onClick = (_: unknown, index: number) => {
+    console.log('Selected department:', data[index].name);
+    // In production: trigger filter, show details, navigate to department view
+  };
+
   return (
     <div className="h-[300px]">
       <ResponsiveContainer width="100%" height="100%">
@@ -62,22 +78,27 @@ export function DepartmentChart() {
             cx="50%"
             cy="50%"
             innerRadius={60} // Donut hole size
-            outerRadius={100} // Chart radius
+            outerRadius={activeIndex !== null ? 105 : 100} // Expand on hover
             paddingAngle={2} // Visual separation between segments
             dataKey="value" // Which field contains the numeric data
             label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-            labelStyle={{
-              fontSize: '12px',
-              fill: 'hsl(var(--foreground))', // Theme-aware text color
-            }}
+            onMouseEnter={onPieEnter}
+            onMouseLeave={onPieLeave}
+            onClick={onClick}
+            style={{ cursor: 'pointer' }}
           >
             {/* 
               Cell mapping: Apply individual colors to each segment
               @pattern: Required by Recharts to color segments differently
               @key: Stable keys prevent unnecessary re-renders
+              @opacity: Dim non-active segments on hover
             */}
             {data.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={entry.color} />
+              <Cell 
+                key={`cell-${index}`} 
+                fill={entry.color}
+                opacity={activeIndex === null || activeIndex === index ? 1 : 0.6}
+              />
             ))}
           </Pie>
           <Tooltip

@@ -1,17 +1,8 @@
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
 import { ExternalLink, Edit, Trash2, Users, DollarSign } from 'lucide-react';
 import { Card, Badge } from '@/components/ui';
 import { formatCurrency } from '@/lib/utils';
 import { Tool } from '@/types';
-
-interface ToolsCatalogProps {
-  searchQuery?: string;
-  filters?: {
-    categories: string[];
-    departments: string[];
-    status: string[];
-  };
-}
 
 // Mock data - will be replaced with API
 const mockTools: Tool[] = [
@@ -115,71 +106,40 @@ const mockTools: Tool[] = [
 
 const ITEMS_PER_PAGE = 6;
 
-export function ToolsCatalog({ searchQuery = '', filters }: ToolsCatalogProps) {
+export function ToolsCatalog() {
   const [currentPage, setCurrentPage] = useState(1);
   
-  // Filter and search tools
-  const filteredTools = useMemo(() => {
-    let result = mockTools;
-
-    // Apply search
-    if (searchQuery) {
-      const query = searchQuery.toLowerCase();
-      result = result.filter(tool =>
-        tool.name.toLowerCase().includes(query) ||
-        tool.category.toLowerCase().includes(query) ||
-        tool.owner_department.toLowerCase().includes(query) ||
-        tool.description.toLowerCase().includes(query)
-      );
-    }
-
-    // Apply filters
-    if (filters) {
-      if (filters.categories.length > 0) {
-        result = result.filter(tool => filters.categories.includes(tool.category));
-      }
-      if (filters.departments.length > 0) {
-        result = result.filter(tool => filters.departments.includes(tool.owner_department));
-      }
-      if (filters.status.length > 0) {
-        result = result.filter(tool => filters.status.includes(tool.status));
-      }
-    }
-
-    return result;
-  }, [searchQuery, filters]);
-  
   // Calculate pagination
-  const totalItems = filteredTools.length;
+  const totalItems = mockTools.length;
   const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const endIndex = startIndex + ITEMS_PER_PAGE;
-  const currentTools = filteredTools.slice(startIndex, endIndex);
-  
-  // Reset to page 1 when filters change
-  useMemo(() => {
-    setCurrentPage(1);
-  }, [searchQuery, filters]);
+  const currentTools = mockTools.slice(startIndex, endIndex);
   
   // Generate page numbers array
   const getPageNumbers = () => {
     const pages: (number | string)[] = [];
-    const maxVisible = 5;
+    const maxVisible = 5; // Maximum page buttons to show
     
     if (totalPages <= maxVisible) {
+      // Show all pages if total is small
       for (let i = 1; i <= totalPages; i++) {
         pages.push(i);
       }
     } else {
+      // Show pages with ellipsis
       if (currentPage <= 3) {
+        // Near start
         for (let i = 1; i <= 4; i++) pages.push(i);
         pages.push('...');
         pages.push(totalPages);
       } else if (currentPage >= totalPages - 2) {
+        // Near end
         pages.push(1);
         pages.push('...');
         for (let i = totalPages - 3; i <= totalPages; i++) pages.push(i);
       } else {
+        // Middle
         pages.push(1);
         pages.push('...');
         pages.push(currentPage - 1);
@@ -211,7 +171,7 @@ export function ToolsCatalog({ searchQuery = '', filters }: ToolsCatalogProps) {
 
       {/* Tools Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {currentTools.map((tool) => (
+        {mockTools.map((tool) => (
           <Card key={tool.id} className="p-6 hover:shadow-xl transition-shadow">
             <div className="flex items-start justify-between">
               <div className="flex items-center gap-3 flex-1">

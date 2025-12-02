@@ -20,18 +20,26 @@ const selectVariants = cva(
 
 export interface SelectProps
   extends SelectHTMLAttributes<HTMLSelectElement>,
-    VariantProps<typeof selectVariants> {}
+    VariantProps<typeof selectVariants> {
+  error?: string;
+}
 
 const Select = forwardRef<HTMLSelectElement, SelectProps>(
-  ({ className, variant, ...props }, ref) => {
+  ({ className, variant, error, ...props }, ref) => {
     return (
-      <div className="relative">
-        <select
-          className={cn(selectVariants({ variant, className }), 'pr-8')}
-          ref={ref}
-          {...props}
-        />
-        <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground-secondary pointer-events-none" />
+      <div className="w-full">
+        <div className="relative">
+          <select
+            className={cn(
+              selectVariants({ variant: error ? 'error' : variant, className }),
+              'pr-8'
+            )}
+            ref={ref}
+            {...props}
+          />
+          <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground-secondary pointer-events-none" />
+        </div>
+        {error && <p className="mt-1 text-sm text-status-unused">{error}</p>}
       </div>
     );
   }

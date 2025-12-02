@@ -300,7 +300,7 @@ export function AddToolModal({ isOpen, onClose, onSubmit }: AddToolModalProps) {
             Loading state shows spinner and disables interaction
             onClick triggers validation and submission
           */}
-          <Button onClick={handleSubmit} loading={isSubmitting}>
+          <Button onClick={handleSubmit} isLoading={isSubmitting}>
             Add Tool
           </Button>
         </>

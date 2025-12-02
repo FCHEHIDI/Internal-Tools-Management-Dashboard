@@ -3,6 +3,7 @@ import { MainLayout } from './components/layouts/MainLayout';
 import { Dashboard } from './pages/Dashboard';
 import { Tools } from './pages/Tools';
 import { Analytics } from './pages/Analytics';
+import { Settings } from './pages/Settings';
 import { NotFound } from './pages/NotFound';
 
 function App() {
@@ -13,6 +14,7 @@ function App() {
           <Route index element={<Dashboard />} />
           <Route path="tools" element={<Tools />} />
           <Route path="analytics" element={<Analytics />} />
+          <Route path="settings" element={<Settings />} />
         </Route>
         <Route path="*" element={<NotFound />} />
       </Routes>

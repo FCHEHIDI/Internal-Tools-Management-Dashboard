@@ -31,15 +31,21 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 
 Input.displayName = 'Input';
 
-export const Label = forwardRef<
-  HTMLLabelElement,
-  React.LabelHTMLAttributes<HTMLLabelElement>
->(({ className, ...props }, ref) => (
-  <label
-    ref={ref}
-    className={cn('text-sm font-medium text-foreground mb-2 block', className)}
-    {...props}
-  />
-));
+export interface LabelProps extends React.LabelHTMLAttributes<HTMLLabelElement> {
+  required?: boolean;
+}
+
+export const Label = forwardRef<HTMLLabelElement, LabelProps>(
+  ({ className, required, children, ...props }, ref) => (
+    <label
+      ref={ref}
+      className={cn('text-sm font-medium text-foreground mb-2 block', className)}
+      {...props}
+    >
+      {children}
+      {required && <span className="text-status-unused ml-1">*</span>}
+    </label>
+  )
+);
 
 Label.displayName = 'Label';

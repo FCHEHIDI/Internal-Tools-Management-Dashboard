@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 
 /**
@@ -26,19 +27,19 @@ const data = [
 ];
 
 /**
- * Color palette for bar chart diversity.
+ * Color palette for bar chart diversity - lighter shades for dark mode.
  * 
- * @design-system Uses semantic colors from CSS variables
+ * @design-system Uses lighter, more readable colors for dark backgrounds
  * @pattern Each bar gets a unique color for visual distinction
  * @why Not just one color: Helps users track specific tools across the chart
  */
 const colors = [
-  'hsl(var(--primary))',
-  'hsl(var(--success))',
-  'hsl(var(--warning))',
-  'hsl(var(--info))',
-  'hsl(var(--danger))',
-  'hsl(var(--purple))',
+  '#60a5fa', // Light blue
+  '#4ade80', // Light green
+  '#fb923c', // Light orange
+  '#a78bfa', // Light purple
+  '#f472b6', // Light pink
+  '#34d399', // Light emerald
 ];
 
 /**
@@ -57,6 +58,22 @@ const colors = [
  * Best for: Categorical comparisons, ranking, part-to-whole analysis
  */
 export function UsageChart() {
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
+
+  const onBarEnter = (_: unknown, index: number) => {
+    setActiveIndex(index);
+  };
+
+  const onBarLeave = () => {
+    setActiveIndex(null);
+  };
+
+  const onClick = (data: unknown) => {
+    const bar = data as { name: string; users: number; cost: number };
+    console.log('Selected tool:', bar.name, 'Users:', bar.users);
+    // In production: navigate to tool details, show breakdown, filter views
+  };
+
   return (
     <div className="h-[300px]">
       <ResponsiveContainer width="100%" height="100%">
@@ -119,10 +136,22 @@ export function UsageChart() {
                      [0, 8, 8, 0] = rounded right corners only (bar direction)
             @cells: Each bar colored individually from colors array
             @modulo: Wraps around if more data points than colors
+            @opacity: Dim non-active bars on hover for focus
           */}
-          <Bar dataKey="users" radius={[0, 8, 8, 0]}>
+          <Bar 
+            dataKey="users" 
+            radius={[0, 8, 8, 0]}
+            onMouseEnter={onBarEnter}
+            onMouseLeave={onBarLeave}
+            onClick={onClick}
+            style={{ cursor: 'pointer' }}
+          >
             {data.map((_, index) => (
-              <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
+              <Cell 
+                key={`cell-${index}`} 
+                fill={colors[index % colors.length]}
+                opacity={activeIndex === null || activeIndex === index ? 1 : 0.6}
+              />
             ))}
           </Bar>
         </BarChart>

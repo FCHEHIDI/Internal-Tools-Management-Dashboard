@@ -1,9 +1,27 @@
+import { useState } from 'react';
 import { Plus, Search, Filter } from 'lucide-react';
 import { Button, Input } from '@/components/ui';
 import { ToolsFilters } from '@/components/features/ToolsFilters';
 import { ToolsCatalog } from '@/components/features/ToolsCatalog';
 
 export function Tools() {
+  const [searchQuery, setSearchQuery] = useState('');
+  const [showFilters, setShowFilters] = useState(true);
+  const [selectedFilters, setSelectedFilters] = useState({
+    categories: [] as string[],
+    departments: [] as string[],
+    status: [] as string[],
+  });
+
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const handleAddTool = () => {
+    console.log('Add tool clicked');
+    // In production: open add tool modal or navigate to add page
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -14,7 +32,7 @@ export function Tools() {
             Manage your SaaS tools catalog
           </p>
         </div>
-        <Button>
+        <Button onClick={handleAddTool}>
           <Plus className="w-4 h-4 mr-2" />
           Add Tool
         </Button>
@@ -28,21 +46,34 @@ export function Tools() {
             type="text"
             placeholder="Search tools by name, category, or department..."
             className="pl-10"
+            value={searchQuery}
+            onChange={handleSearch}
           />
         </div>
-        <Button variant="secondary">
+        <Button 
+          variant="secondary"
+          onClick={() => setShowFilters(!showFilters)}
+        >
           <Filter className="w-4 h-4 mr-2" />
-          Filters
+          Filters {showFilters ? '(Hide)' : '(Show)'}
         </Button>
       </div>
 
       {/* Filters Sidebar and Catalog */}
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        <div className="lg:col-span-1">
-          <ToolsFilters />
-        </div>
-        <div className="lg:col-span-3">
-          <ToolsCatalog />
+        {showFilters && (
+          <div className="lg:col-span-1">
+            <ToolsFilters 
+              selectedFilters={selectedFilters}
+              onFilterChange={setSelectedFilters}
+            />
+          </div>
+        )}
+        <div className={showFilters ? "lg:col-span-3" : "lg:col-span-4"}>
+          <ToolsCatalog 
+            searchQuery={searchQuery}
+            filters={selectedFilters}
+          />
         </div>
       </div>
     </div>
