@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { ExternalLink, Edit, Trash2, Users, DollarSign } from 'lucide-react';
 import { Card, Badge } from '@/components/ui';
 import { formatCurrency } from '@/lib/utils';
@@ -103,13 +104,56 @@ const mockTools: Tool[] = [
   },
 ];
 
+const ITEMS_PER_PAGE = 6;
+
 export function ToolsCatalog() {
+  const [currentPage, setCurrentPage] = useState(1);
+  
+  // Calculate pagination
+  const totalItems = mockTools.length;
+  const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const endIndex = startIndex + ITEMS_PER_PAGE;
+  const currentTools = mockTools.slice(startIndex, endIndex);
+  
+  // Generate page numbers array
+  const getPageNumbers = () => {
+    const pages: (number | string)[] = [];
+    const maxVisible = 5;
+    
+    if (totalPages <= maxVisible) {
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(i);
+      }
+    } else {
+      if (currentPage <= 3) {
+        for (let i = 1; i <= 4; i++) pages.push(i);
+        pages.push('...');
+        pages.push(totalPages);
+      } else if (currentPage >= totalPages - 2) {
+        pages.push(1);
+        pages.push('...');
+        for (let i = totalPages - 3; i <= totalPages; i++) pages.push(i);
+      } else {
+        pages.push(1);
+        pages.push('...');
+        pages.push(currentPage - 1);
+        pages.push(currentPage);
+        pages.push(currentPage + 1);
+        pages.push('...');
+        pages.push(totalPages);
+      }
+    }
+    
+    return pages;
+  };
+  
   return (
     <div>
       {/* Header with count */}
       <div className="flex items-center justify-between mb-4">
         <p className="text-sm text-foreground-secondary">
-          Showing <span className="font-medium text-foreground">{mockTools.length}</span> tools
+          Showing <span className="font-medium text-foreground">{startIndex + 1}-{Math.min(endIndex, totalItems)}</span> of <span className="font-medium text-foreground">{totalItems}</span> tools
         </p>
         <select className="px-3 py-2 bg-surface border border-border rounded-lg text-sm text-foreground">
           <option>Sort by: Recently Updated</option>
@@ -122,7 +166,7 @@ export function ToolsCatalog() {
 
       {/* Tools Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {mockTools.map((tool) => (
+        {currentTools.map((tool) => (
           <Card key={tool.id} className="p-6 hover:shadow-xl transition-shadow">
             <div className="flex items-start justify-between">
               <div className="flex items-center gap-3 flex-1">
@@ -189,23 +233,43 @@ export function ToolsCatalog() {
       </div>
 
       {/* Pagination */}
-      <div className="mt-6 flex items-center justify-between">
-        <button className="px-4 py-2 border border-border rounded-lg hover:bg-surface-hover transition-colors text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed">
-          Previous
-        </button>
-        <div className="flex items-center gap-2">
-          <button className="w-8 h-8 rounded-lg bg-primary text-white font-medium">1</button>
-          <button className="w-8 h-8 rounded-lg hover:bg-surface-hover transition-colors">
-            2
+      {totalPages > 1 && (
+        <div className="mt-6 flex items-center justify-between">
+          <button 
+            onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+            disabled={currentPage === 1}
+            className="px-4 py-2 border border-border rounded-lg hover:bg-surface-hover transition-colors text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            Previous
           </button>
-          <button className="w-8 h-8 rounded-lg hover:bg-surface-hover transition-colors">
-            3
+          <div className="flex items-center gap-2">
+            {getPageNumbers().map((page, index) => (
+              page === '...' ? (
+                <span key={`ellipsis-${index}`} className="px-2 text-foreground-secondary">...</span>
+              ) : (
+                <button
+                  key={page}
+                  onClick={() => setCurrentPage(page as number)}
+                  className={`w-8 h-8 rounded-lg font-medium transition-colors ${
+                    currentPage === page 
+                      ? 'bg-primary text-white' 
+                      : 'hover:bg-surface-hover'
+                  }`}
+                >
+                  {page}
+                </button>
+              )
+            ))}
+          </div>
+          <button 
+            onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+            disabled={currentPage === totalPages}
+            className="px-4 py-2 border border-border rounded-lg hover:bg-surface-hover transition-colors text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            Next
           </button>
         </div>
-        <button className="px-4 py-2 border border-border rounded-lg hover:bg-surface-hover transition-colors text-sm font-medium">
-          Next
-        </button>
-      </div>
+      )}
     </div>
   );
 }
