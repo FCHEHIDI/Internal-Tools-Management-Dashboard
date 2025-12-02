@@ -1,0 +1,283 @@
+import { test as base, expect } from '@playwright/test';
+
+/**
+ * @file A/B Testing Framework for Playwright
+ * @description Custom fixtures and utilities for running A/B tests on the widget pattern vs modal pattern
+ * 
+ * @pattern Test Fixtures
+ * Playwright's fixtures allow us to:
+ * - Set up test context (which variant to show)
+ * - Track user interactions
+ * - Measure conversion rates
+ * - Compare performance metrics
+ * 
+ * @why A/B Testing with E2E Framework
+ * Using Playwright for A/B testing provides:
+ * 1. Real browser behavior (not synthetic)
+ * 2. Performance metrics (LCP, FID, CLS)
+ * 3. User journey tracking
+ * 4. Screenshot comparison
+ * 5. Accessibility testing
+ * 6. Cross-browser validation
+ */
+
+/**
+ * @interface ABTestVariant
+ * @description Defines the structure of an A/B test variant
+ */
+export interface ABTestVariant {
+  name: 'control' | 'widget' | 'modal';
+  description: string;
+  featureFlags?: Record<string, boolean>;
+}
+
+/**
+ * @interface ABTestMetrics
+ * @description Metrics we track for each variant
+ */
+export interface ABTestMetrics {
+  // Engagement metrics
+  impressions: number;
+  clicks: number;
+  formStarts: number;
+  formCompletions: number;
+  
+  // Conversion funnel
+  ctr: number; // Click-through rate
+  startRate: number; // % who start form after click
+  completionRate: number; // % who complete form after start
+  overallConversion: number; // End-to-end conversion
+  
+  // Time metrics (in ms)
+  timeToEngage: number; // Time until first interaction
+  timeToFormStart: number; // Time to start filling form
+  timeToSubmit: number; // Total time to submission
+  
+  // Performance metrics
+  lcp: number; // Largest Contentful Paint
+  fid: number; // First Input Delay
+  cls: number; // Cumulative Layout Shift
+  
+  // UX metrics
+  dismissals: number; // How often user dismisses/cancels
+  backButtonUses: number; // How often user goes back
+  errors: number; // Validation errors encountered
+}
+
+/**
+ * @fixture abTestContext
+ * @description Extended Playwright test with A/B testing capabilities
+ */
+type ABTestFixtures = {
+  variant: ABTestVariant;
+  metrics: ABTestMetrics;
+  trackEvent: (event: string, data?: any) => void;
+};
+
+/**
+ * Custom test fixture with A/B testing support
+ */
+export const test = base.extend<ABTestFixtures>({
+  /**
+   * Variant fixture: Determines which version to test
+   * Can be overridden per test or randomized
+   */
+  variant: async ({}, use) => {
+    // Default to widget variant
+    // In production, this would be randomized or determined by test worker
+    const variant: ABTestVariant = {
+      name: 'widget',
+      description: 'Modern widget pattern with welcome → campaign → form flow',
+      featureFlags: {
+        useWidgetPattern: true,
+        showCampaign: true,
+        enableAnimations: true,
+      },
+    };
+    await use(variant);
+  },
+
+  /**
+   * Metrics fixture: Tracks all test metrics
+   */
+  metrics: async ({}, use) => {
+    const metrics: ABTestMetrics = {
+      impressions: 0,
+      clicks: 0,
+      formStarts: 0,
+      formCompletions: 0,
+      ctr: 0,
+      startRate: 0,
+      completionRate: 0,
+      overallConversion: 0,
+      timeToEngage: 0,
+      timeToFormStart: 0,
+      timeToSubmit: 0,
+      lcp: 0,
+      fid: 0,
+      cls: 0,
+      dismissals: 0,
+      backButtonUses: 0,
+      errors: 0,
+    };
+    await use(metrics);
+    
+    // After test completes, calculate conversion rates
+    metrics.ctr = metrics.impressions > 0 ? metrics.clicks / metrics.impressions : 0;
+    metrics.startRate = metrics.clicks > 0 ? metrics.formStarts / metrics.clicks : 0;
+    metrics.completionRate = metrics.formStarts > 0 ? metrics.formCompletions / metrics.formStarts : 0;
+    metrics.overallConversion = metrics.impressions > 0 ? metrics.formCompletions / metrics.impressions : 0;
+  },
+
+  /**
+   * Event tracker: Logs user interactions for analysis
+   */
+  trackEvent: async ({ page }, use) => {
+    const events: Array<{ event: string; timestamp: number; data?: any }> = [];
+    
+    const tracker = (event: string, data?: any) => {
+      events.push({
+        event,
+        timestamp: Date.now(),
+        data,
+      });
+      console.log(`[AB-TEST] ${event}`, data || '');
+    };
+    
+    await use(tracker);
+    
+    // After test, save events to file for analysis
+    // In production: Send to analytics platform (Amplitude, Mixpanel, etc.)
+    console.log('[AB-TEST] Total events:', events.length);
+  },
+});
+
+/**
+ * @class ABTestRunner
+ * @description Orchestrates A/B tests with statistical analysis
+ */
+export class ABTestRunner {
+  private results: Map<string, ABTestMetrics[]> = new Map();
+
+  /**
+   * Run test for specific variant multiple times
+   */
+  async runVariant(variantName: string, iterations: number = 30) {
+    const metrics: ABTestMetrics[] = [];
+    
+    for (let i = 0; i < iterations; i++) {
+      // Run test iteration
+      // Collect metrics
+      // Store results
+    }
+    
+    this.results.set(variantName, metrics);
+  }
+
+  /**
+   * Compare two variants statistically
+   */
+  compareVariants(variantA: string, variantB: string) {
+    const metricsA = this.results.get(variantA);
+    const metricsB = this.results.get(variantB);
+    
+    if (!metricsA || !metricsB) {
+      throw new Error('Both variants must be tested before comparison');
+    }
+
+    // Calculate statistical significance
+    return {
+      conversionLift: this.calculateLift(metricsA, metricsB, 'overallConversion'),
+      ctrLift: this.calculateLift(metricsA, metricsB, 'ctr'),
+      timeImprovement: this.calculateTimeImprovement(metricsA, metricsB),
+      winner: this.determineWinner(metricsA, metricsB),
+    };
+  }
+
+  private calculateLift(
+    variantA: ABTestMetrics[],
+    variantB: ABTestMetrics[],
+    metric: keyof ABTestMetrics
+  ): number {
+    const avgA = variantA.reduce((sum, m) => sum + (m[metric] as number), 0) / variantA.length;
+    const avgB = variantB.reduce((sum, m) => sum + (m[metric] as number), 0) / variantB.length;
+    
+    return ((avgB - avgA) / avgA) * 100; // Percentage lift
+  }
+
+  private calculateTimeImprovement(variantA: ABTestMetrics[], variantB: ABTestMetrics[]): number {
+    const avgTimeA = variantA.reduce((sum, m) => sum + m.timeToSubmit, 0) / variantA.length;
+    const avgTimeB = variantB.reduce((sum, m) => sum + m.timeToSubmit, 0) / variantB.length;
+    
+    return avgTimeA - avgTimeB; // Time saved in ms
+  }
+
+  private determineWinner(variantA: ABTestMetrics[], variantB: ABTestMetrics[]): string {
+    // Simple winner determination based on overall conversion
+    const conversionA = variantA.reduce((sum, m) => sum + m.overallConversion, 0) / variantA.length;
+    const conversionB = variantB.reduce((sum, m) => sum + m.overallConversion, 0) / variantB.length;
+    
+    if (Math.abs(conversionA - conversionB) < 0.02) {
+      return 'No significant difference';
+    }
+    
+    return conversionB > conversionA ? 'Variant B' : 'Variant A';
+  }
+
+  /**
+   * Generate detailed report
+   */
+  generateReport() {
+    console.log('\n📊 A/B Test Report\n');
+    console.log('='.repeat(80));
+    
+    for (const [variant, metrics] of this.results) {
+      console.log(`\n${variant.toUpperCase()}:`);
+      console.log(`  Sample size: ${metrics.length}`);
+      console.log(`  Avg Conversion: ${(metrics.reduce((s, m) => s + m.overallConversion, 0) / metrics.length * 100).toFixed(2)}%`);
+      console.log(`  Avg Time to Submit: ${(metrics.reduce((s, m) => s + m.timeToSubmit, 0) / metrics.length / 1000).toFixed(2)}s`);
+    }
+  }
+}
+
+/**
+ * @function measureWebVitals
+ * @description Capture Core Web Vitals using Performance API
+ */
+export async function measureWebVitals(page: any): Promise<{ lcp: number; fid: number; cls: number }> {
+  return page.evaluate(() => {
+    return new Promise<{ lcp: number; fid: number; cls: number }>((resolve) => {
+      const metrics = { lcp: 0, fid: 0, cls: 0 };
+      
+      // Measure LCP (Largest Contentful Paint)
+      new PerformanceObserver((list) => {
+        const entries = list.getEntries();
+        const lastEntry = entries[entries.length - 1] as any;
+        metrics.lcp = lastEntry.renderTime || lastEntry.loadTime;
+      }).observe({ entryTypes: ['largest-contentful-paint'] });
+      
+      // Measure FID (First Input Delay)
+      new PerformanceObserver((list) => {
+        const entries = list.getEntries();
+        entries.forEach((entry: any) => {
+          metrics.fid = entry.processingStart - entry.startTime;
+        });
+      }).observe({ entryTypes: ['first-input'] });
+      
+      // Measure CLS (Cumulative Layout Shift)
+      new PerformanceObserver((list) => {
+        const entries = list.getEntries();
+        entries.forEach((entry: any) => {
+          if (!entry.hadRecentInput) {
+            metrics.cls += entry.value;
+          }
+        });
+      }).observe({ entryTypes: ['layout-shift'] });
+      
+      // Resolve after a delay to ensure metrics are captured
+      setTimeout(() => resolve(metrics), 3000);
+    });
+  });
+}
+
+export { expect };
