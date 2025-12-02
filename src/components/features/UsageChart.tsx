@@ -27,20 +27,13 @@ const data = [
 ];
 
 /**
- * Color palette for bar chart diversity - lighter shades for dark mode.
+ * Static color scheme with hover highlight.
  * 
- * @design-system Uses lighter, more readable colors for dark backgrounds
- * @pattern Each bar gets a unique color for visual distinction
- * @why Not just one color: Helps users track specific tools across the chart
+ * @design-system Single color for consistency, silver for hover feedback
+ * @pattern Clean, professional appearance
  */
-const colors = [
-  '#60a5fa', // Light blue
-  '#4ade80', // Light green
-  '#fb923c', // Light orange
-  '#a78bfa', // Light purple
-  '#f472b6', // Light pink
-  '#34d399', // Light emerald
-];
+const PRIMARY_COLOR = '#60a5fa'; // Light blue
+const HOVER_COLOR = '#c0c0c0'; // Silver
 
 /**
  * UsageChart - Horizontal bar chart displaying top tools by usage.
@@ -118,10 +111,10 @@ export function UsageChart() {
           */}
           <Tooltip
             contentStyle={{
-              backgroundColor: 'hsl(var(--surface))',
-              border: '1px solid hsl(var(--border))',
+              backgroundColor: '#374151',
+              border: '1px solid #6b7280',
               borderRadius: '8px',
-              color: 'hsl(var(--foreground))',
+              color: '#fef3c7',
             }}
             formatter={(value: number, name: string) => {
               if (name === 'users') return [`${value} users`, 'Active Users'];
@@ -149,8 +142,7 @@ export function UsageChart() {
             {data.map((_, index) => (
               <Cell 
                 key={`cell-${index}`} 
-                fill={colors[index % colors.length]}
-                opacity={activeIndex === null || activeIndex === index ? 1 : 0.6}
+                fill={activeIndex === index ? HOVER_COLOR : PRIMARY_COLOR}
               />
             ))}
           </Bar>

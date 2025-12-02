@@ -175,8 +175,6 @@ export function ToolsFilters({ selectedFilters, onFilterChange }: ToolsFiltersPr
         <CardContent className="space-y-2">
           {categories.map((category) => (
             <button
-          {categories.map((category) => (
-            <button
               key={category.value}
               onClick={() => toggleCategory(category.value)}
               className={`w-full flex items-center justify-between p-2 rounded-lg transition-colors ${
@@ -184,7 +182,9 @@ export function ToolsFilters({ selectedFilters, onFilterChange }: ToolsFiltersPr
                   ? 'bg-primary/10 text-primary'
                   : 'hover:bg-surface-hover'
               }`}
-            > <Badge size="sm" variant="default">
+            >
+              <span className="text-sm font-medium">{category.label}</span>
+              <Badge size="sm" variant="default">
                 {category.count}
               </Badge>
             </button>

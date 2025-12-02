@@ -72,10 +72,10 @@ export function CostChart() {
           */}
           <Tooltip
             contentStyle={{
-              backgroundColor: 'hsl(var(--surface))',
-              border: '1px solid hsl(var(--border))',
+              backgroundColor: '#374151',
+              border: '1px solid #6b7280',
               borderRadius: '8px',
-              color: 'hsl(var(--foreground))',
+              color: '#fef3c7',
             }}
             formatter={(value: number) => [`€${value.toLocaleString()}`, '']}
           />

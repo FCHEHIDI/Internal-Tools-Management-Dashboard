@@ -1,0 +1,479 @@
+{
+  "config": {
+    "configFile": "C:\\Users\\Fares\\Internal-Tools-Management-Dashboard\\playwright.config.ts",
+    "rootDir": "C:/Users/Fares/Internal-Tools-Management-Dashboard/tests",
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "testType": "A/B Testing",
+      "framework": "Playwright",
+      "tags": {
+        "@smoke": "Quick validation tests",
+        "@critical": "Must-pass functionality",
+        "@ab-test": "A/B test comparison",
+        "@mobile": "Mobile-specific tests",
+        "@performance": "Performance benchmarks",
+        "@accessibility": "Accessibility compliance",
+        "@full-coverage": "Extended browser matrix"
+      },
+      "actualWorkers": 3
+    },
+    "preserveOutput": "always",
+    "reporter": [
+      [
+        "html",
+        {
+          "outputFolder": "playwright-report"
+        }
+      ],
+      [
+        "json",
+        {
+          "outputFile": "playwright-report/results.json"
+        }
+      ],
+      [
+        "junit",
+        {
+          "outputFile": "playwright-report/junit.xml"
+        }
+      ],
+      [
+        "C:\\Users\\Fares\\Internal-Tools-Management-Dashboard\\tests\\reporters\\ab-test-reporter.ts",
+        null
+      ],
+      [
+        "list",
+        null
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "quiet": false,
+    "projects": [
+      {
+        "outputDir": "C:/Users/Fares/Internal-Tools-Management-Dashboard/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "testType": "A/B Testing",
+          "framework": "Playwright",
+          "tags": {
+            "@smoke": "Quick validation tests",
+            "@critical": "Must-pass functionality",
+            "@ab-test": "A/B test comparison",
+            "@mobile": "Mobile-specific tests",
+            "@performance": "Performance benchmarks",
+            "@accessibility": "Accessibility compliance",
+            "@full-coverage": "Extended browser matrix"
+          },
+          "actualWorkers": 3
+        },
+        "id": "chromium-widget",
+        "name": "chromium-widget",
+        "testDir": "C:/Users/Fares/Internal-Tools-Management-Dashboard/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "/.*\\.spec\\.ts/"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "C:/Users/Fares/Internal-Tools-Management-Dashboard/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "testType": "A/B Testing",
+          "framework": "Playwright",
+          "tags": {
+            "@smoke": "Quick validation tests",
+            "@critical": "Must-pass functionality",
+            "@ab-test": "A/B test comparison",
+            "@mobile": "Mobile-specific tests",
+            "@performance": "Performance benchmarks",
+            "@accessibility": "Accessibility compliance",
+            "@full-coverage": "Extended browser matrix"
+          },
+          "actualWorkers": 3
+        },
+        "id": "firefox",
+        "name": "firefox",
+        "testDir": "C:/Users/Fares/Internal-Tools-Management-Dashboard/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "/.*\\.spec\\.ts/"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "C:/Users/Fares/Internal-Tools-Management-Dashboard/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "testType": "A/B Testing",
+          "framework": "Playwright",
+          "tags": {
+            "@smoke": "Quick validation tests",
+            "@critical": "Must-pass functionality",
+            "@ab-test": "A/B test comparison",
+            "@mobile": "Mobile-specific tests",
+            "@performance": "Performance benchmarks",
+            "@accessibility": "Accessibility compliance",
+            "@full-coverage": "Extended browser matrix"
+          },
+          "actualWorkers": 3
+        },
+        "id": "mobile-chrome",
+        "name": "mobile-chrome",
+        "testDir": "C:/Users/Fares/Internal-Tools-Management-Dashboard/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "/.*\\.spec\\.ts/"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "C:/Users/Fares/Internal-Tools-Management-Dashboard/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "testType": "A/B Testing",
+          "framework": "Playwright",
+          "tags": {
+            "@smoke": "Quick validation tests",
+            "@critical": "Must-pass functionality",
+            "@ab-test": "A/B test comparison",
+            "@mobile": "Mobile-specific tests",
+            "@performance": "Performance benchmarks",
+            "@accessibility": "Accessibility compliance",
+            "@full-coverage": "Extended browser matrix"
+          },
+          "actualWorkers": 3
+        },
+        "id": "webkit",
+        "name": "webkit",
+        "testDir": "C:/Users/Fares/Internal-Tools-Management-Dashboard/tests",
+        "testIgnore": [
+          "/.*performance.*/"
+        ],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "C:/Users/Fares/Internal-Tools-Management-Dashboard/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "testType": "A/B Testing",
+          "framework": "Playwright",
+          "tags": {
+            "@smoke": "Quick validation tests",
+            "@critical": "Must-pass functionality",
+            "@ab-test": "A/B test comparison",
+            "@mobile": "Mobile-specific tests",
+            "@performance": "Performance benchmarks",
+            "@accessibility": "Accessibility compliance",
+            "@full-coverage": "Extended browser matrix"
+          },
+          "actualWorkers": 3
+        },
+        "id": "mobile-safari",
+        "name": "mobile-safari",
+        "testDir": "C:/Users/Fares/Internal-Tools-Management-Dashboard/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "C:/Users/Fares/Internal-Tools-Management-Dashboard/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "testType": "A/B Testing",
+          "framework": "Playwright",
+          "tags": {
+            "@smoke": "Quick validation tests",
+            "@critical": "Must-pass functionality",
+            "@ab-test": "A/B test comparison",
+            "@mobile": "Mobile-specific tests",
+            "@performance": "Performance benchmarks",
+            "@accessibility": "Accessibility compliance",
+            "@full-coverage": "Extended browser matrix"
+          },
+          "actualWorkers": 3
+        },
+        "id": "edge",
+        "name": "edge",
+        "testDir": "C:/Users/Fares/Internal-Tools-Management-Dashboard/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.57.0",
+    "workers": 8,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "ab-test\\happy-path.spec.ts",
+      "file": "ab-test/happy-path.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Widget Pattern - Happy Path",
+          "file": "ab-test/happy-path.spec.ts",
+          "line": 11,
+          "column": 6,
+          "specs": [
+            {
+              "title": "Complete journey: Welcome → Campaign → Form → Success",
+              "ok": false,
+              "tags": [
+                "smoke",
+                "critical",
+                "ab-test",
+                "widget"
+              ],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [
+                    {
+                      "type": "variant",
+                      "description": "widget"
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-widget",
+                  "projectName": "chromium-widget",
+                  "results": [
+                    {
+                      "workerIndex": 9,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 4545,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32mtrue\u001b[39m\nReceived: \u001b[31mfalse\u001b[39m",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32mtrue\u001b[39m\nReceived: \u001b[31mfalse\u001b[39m\n    at C:\\Users\\Fares\\Internal-Tools-Management-Dashboard\\tests\\ab-test\\happy-path.spec.ts:44:27",
+                        "location": {
+                          "file": "C:\\Users\\Fares\\Internal-Tools-Management-Dashboard\\tests\\ab-test\\happy-path.spec.ts",
+                          "column": 27,
+                          "line": 44
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 42 |\u001b[39m     \u001b[90m// STEP 3: Campaign shown\u001b[39m\n \u001b[90m 43 |\u001b[39m     \u001b[36mconst\u001b[39m campaignValid \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m dashboard\u001b[33m.\u001b[39misCampaignStateValid()\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 44 |\u001b[39m     expect(campaignValid)\u001b[33m.\u001b[39mtoBe(\u001b[36mtrue\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                           \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 45 |\u001b[39m     \n \u001b[90m 46 |\u001b[39m     \u001b[36mawait\u001b[39m dashboard\u001b[33m.\u001b[39mclickCampaignPrimaryCTA()\u001b[33m;\u001b[39m\n \u001b[90m 47 |\u001b[39m     trackEvent(\u001b[32m'campaign_cta_click'\u001b[39m\u001b[33m,\u001b[39m { cta\u001b[33m:\u001b[39m \u001b[32m'primary'\u001b[39m })\u001b[33m;\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\Users\\Fares\\Internal-Tools-Management-Dashboard\\tests\\ab-test\\happy-path.spec.ts",
+                            "column": 27,
+                            "line": 44
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32mtrue\u001b[39m\nReceived: \u001b[31mfalse\u001b[39m\n\n\u001b[0m \u001b[90m 42 |\u001b[39m     \u001b[90m// STEP 3: Campaign shown\u001b[39m\n \u001b[90m 43 |\u001b[39m     \u001b[36mconst\u001b[39m campaignValid \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m dashboard\u001b[33m.\u001b[39misCampaignStateValid()\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 44 |\u001b[39m     expect(campaignValid)\u001b[33m.\u001b[39mtoBe(\u001b[36mtrue\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                           \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 45 |\u001b[39m     \n \u001b[90m 46 |\u001b[39m     \u001b[36mawait\u001b[39m dashboard\u001b[33m.\u001b[39mclickCampaignPrimaryCTA()\u001b[33m;\u001b[39m\n \u001b[90m 47 |\u001b[39m     trackEvent(\u001b[32m'campaign_cta_click'\u001b[39m\u001b[33m,\u001b[39m { cta\u001b[33m:\u001b[39m \u001b[32m'primary'\u001b[39m })\u001b[33m;\u001b[39m\u001b[0m\n\u001b[2m    at C:\\Users\\Fares\\Internal-Tools-Management-Dashboard\\tests\\ab-test\\happy-path.spec.ts:44:27\u001b[22m"
+                        }
+                      ],
+                      "stdout": [
+                        {
+                          "text": "[AB-TEST:widget] widget_impression { variant: \u001b[32m'widget'\u001b[39m }\n"
+                        },
+                        {
+                          "text": "[AB-TEST:widget] cta_click { from: \u001b[32m'welcome'\u001b[39m, to: \u001b[32m'campaign'\u001b[39m }\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-12-02T17:00:30.241Z",
+                      "annotations": [
+                        {
+                          "type": "variant",
+                          "description": "widget"
+                        }
+                      ],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\Fares\\Internal-Tools-Management-Dashboard\\test-results\\ab-test-happy-path-Widget--f7359-→-Campaign-→-Form-→-Success-chromium-widget\\test-failed-1.png"
+                        },
+                        {
+                          "name": "ab-test-events",
+                          "contentType": "application/json",
+                          "body": "WwogIHsKICAgICJuYW1lIjogIndpZGdldF9pbXByZXNzaW9uIiwKICAgICJ0aW1lc3RhbXAiOiAzNCwKICAgICJkYXRhIjogewogICAgICAidmFyaWFudCI6ICJ3aWRnZXQiCiAgICB9LAogICAgInZhcmlhbnQiOiAid2lkZ2V0IgogIH0sCiAgewogICAgIm5hbWUiOiAiY3RhX2NsaWNrIiwKICAgICJ0aW1lc3RhbXAiOiAxMDYsCiAgICAiZGF0YSI6IHsKICAgICAgImZyb20iOiAid2VsY29tZSIsCiAgICAgICJ0byI6ICJjYW1wYWlnbiIKICAgIH0sCiAgICAidmFyaWFudCI6ICJ3aWRnZXQiCiAgfQpd"
+                        },
+                        {
+                          "name": "ab-test-metrics",
+                          "contentType": "application/json",
+                          "body": "ewogICJ2YXJpYW50IjogIndpZGdldCIsCiAgIm1ldHJpY3MiOiB7CiAgICAiaW1wcmVzc2lvbnMiOiAxLAogICAgImNsaWNrcyI6IDEsCiAgICAiZm9ybVN0YXJ0cyI6IDAsCiAgICAiZm9ybUNvbXBsZXRpb25zIjogMCwKICAgICJjdHIiOiAxLAogICAgInN0YXJ0UmF0ZSI6IDAsCiAgICAiY29tcGxldGlvblJhdGUiOiAwLAogICAgIm92ZXJhbGxDb252ZXJzaW9uIjogMCwKICAgICJ0aW1lVG9FbmdhZ2UiOiA2NiwKICAgICJ0aW1lVG9Gb3JtU3RhcnQiOiAwLAogICAgInRpbWVUb1N1Ym1pdCI6IDAsCiAgICAibGNwIjogMCwKICAgICJmaWQiOiAwLAogICAgImNscyI6IDAsCiAgICAidHRmYiI6IDAsCiAgICAiZGlzbWlzc2FscyI6IDAsCiAgICAiYmFja0J1dHRvblVzZXMiOiAwLAogICAgImVycm9ycyI6IDAsCiAgICAiZm9ybVJldHJpZXMiOiAwLAogICAgInZpZXdwb3J0IjogewogICAgICAid2lkdGgiOiAxMjgwLAogICAgICAiaGVpZ2h0IjogNzIwCiAgICB9LAogICAgInVzZXJBZ2VudCI6ICJNb3ppbGxhLzUuMCAoV2luZG93cyBOVCAxMC4wOyBXaW42NDsgeDY0KSBBcHBsZVdlYktpdC81MzcuMzYgKEtIVE1MLCBsaWtlIEdlY2tvKSBDaHJvbWUvMTQzLjAuNzQ5OS40IFNhZmFyaS81MzcuMzYiCiAgfSwKICAidGltZXN0YW1wIjogMTc2NDY5NDgzNDU1MiwKICAidGVzdFRpdGxlIjogIkNvbXBsZXRlIGpvdXJuZXk6IFdlbGNvbWUg4oaSIENhbXBhaWduIOKGkiBGb3JtIOKGkiBTdWNjZXNzIiwKICAicHJvamVjdCI6ICJjaHJvbWl1bS13aWRnZXQiCn0="
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "C:\\Users\\Fares\\Internal-Tools-Management-Dashboard\\test-results\\ab-test-happy-path-Widget--f7359-→-Campaign-→-Form-→-Success-chromium-widget\\video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\Fares\\Internal-Tools-Management-Dashboard\\test-results\\ab-test-happy-path-Widget--f7359-→-Campaign-→-Form-→-Success-chromium-widget\\error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "C:\\Users\\Fares\\Internal-Tools-Management-Dashboard\\test-results\\ab-test-happy-path-Widget--f7359-→-Campaign-→-Form-→-Success-chromium-widget\\trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\Users\\Fares\\Internal-Tools-Management-Dashboard\\tests\\ab-test\\happy-path.spec.ts",
+                        "column": 27,
+                        "line": 44
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "5c5f1688a0badbd193b5-987156c0c369ebc84a6c",
+              "file": "ab-test/happy-path.spec.ts",
+              "line": 17,
+              "column": 3
+            },
+            {
+              "title": "Fast user journey - minimal interactions",
+              "ok": true,
+              "tags": [
+                "smoke",
+                "critical",
+                "ab-test",
+                "widget"
+              ],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [
+                    {
+                      "type": "variant",
+                      "description": "widget"
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-widget",
+                  "projectName": "chromium-widget",
+                  "results": [
+                    {
+                      "workerIndex": 10,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 7806,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-12-02T17:00:30.239Z",
+                      "annotations": [
+                        {
+                          "type": "variant",
+                          "description": "widget"
+                        }
+                      ],
+                      "attachments": [
+                        {
+                          "name": "ab-test-metrics",
+                          "contentType": "application/json",
+                          "body": "ewogICJ2YXJpYW50IjogIndpZGdldCIsCiAgIm1ldHJpY3MiOiB7CiAgICAiaW1wcmVzc2lvbnMiOiAxLAogICAgImNsaWNrcyI6IDEsCiAgICAiZm9ybVN0YXJ0cyI6IDEsCiAgICAiZm9ybUNvbXBsZXRpb25zIjogMSwKICAgICJjdHIiOiAxLAogICAgInN0YXJ0UmF0ZSI6IDEsCiAgICAiY29tcGxldGlvblJhdGUiOiAxLAogICAgIm92ZXJhbGxDb252ZXJzaW9uIjogMSwKICAgICJ0aW1lVG9FbmdhZ2UiOiAwLAogICAgInRpbWVUb0Zvcm1TdGFydCI6IDAsCiAgICAidGltZVRvU3VibWl0IjogMCwKICAgICJsY3AiOiAwLAogICAgImZpZCI6IDAsCiAgICAiY2xzIjogMCwKICAgICJ0dGZiIjogMCwKICAgICJkaXNtaXNzYWxzIjogMCwKICAgICJiYWNrQnV0dG9uVXNlcyI6IDAsCiAgICAiZXJyb3JzIjogMCwKICAgICJmb3JtUmV0cmllcyI6IDAsCiAgICAidmlld3BvcnQiOiB7CiAgICAgICJ3aWR0aCI6IDEyODAsCiAgICAgICJoZWlnaHQiOiA3MjAKICAgIH0sCiAgICAidXNlckFnZW50IjogIk1vemlsbGEvNS4wIChXaW5kb3dzIE5UIDEwLjA7IFdpbjY0OyB4NjQpIEFwcGxlV2ViS2l0LzUzNy4zNiAoS0hUTUwsIGxpa2UgR2Vja28pIENocm9tZS8xNDMuMC43NDk5LjQgU2FmYXJpLzUzNy4zNiIKICB9LAogICJ0aW1lc3RhbXAiOiAxNzY0Njk0ODM3NzQ5LAogICJ0ZXN0VGl0bGUiOiAiRmFzdCB1c2VyIGpvdXJuZXkgLSBtaW5pbWFsIGludGVyYWN0aW9ucyIsCiAgInByb2plY3QiOiAiY2hyb21pdW0td2lkZ2V0Igp9"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "C:\\Users\\Fares\\Internal-Tools-Management-Dashboard\\test-results\\ab-test-happy-path-Widget--c7ad6-rney---minimal-interactions-chromium-widget\\trace.zip"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "5c5f1688a0badbd193b5-d8d3cdc6301f7f980cf2",
+              "file": "ab-test/happy-path.spec.ts",
+              "line": 87,
+              "column": 3
+            },
+            {
+              "title": "Returning user - show different content",
+              "ok": true,
+              "tags": [
+                "smoke",
+                "critical",
+                "ab-test",
+                "widget"
+              ],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-widget",
+                  "projectName": "chromium-widget",
+                  "results": [
+                    {
+                      "workerIndex": 11,
+                      "parallelIndex": 2,
+                      "status": "passed",
+                      "duration": 5051,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-12-02T17:00:30.240Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "C:\\Users\\Fares\\Internal-Tools-Management-Dashboard\\test-results\\ab-test-happy-path-Widget--2dd1e-er---show-different-content-chromium-widget\\trace.zip"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "5c5f1688a0badbd193b5-3bb93c8a71c1440cc466",
+              "file": "ab-test/happy-path.spec.ts",
+              "line": 117,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2025-12-02T17:00:28.450Z",
+    "duration": 10016.67200000002,
+    "expected": 2,
+    "skipped": 0,
+    "unexpected": 1,
+    "flaky": 0
+  }
+}

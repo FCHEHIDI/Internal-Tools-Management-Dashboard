@@ -20,12 +20,15 @@ import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recha
  * @note Colors should be configurable per organization's needs
  */
 const data = [
-  { name: 'Engineering', value: 12500, color: '#60a5fa' }, // Light blue
-  { name: 'Sales', value: 8200, color: '#4ade80' }, // Light green
-  { name: 'Marketing', value: 4800, color: '#fb923c' }, // Light orange
-  { name: 'Design', value: 2100, color: '#a78bfa' }, // Light purple
-  { name: 'Support', value: 1150, color: '#f472b6' }, // Light pink
+  { name: 'Engineering', value: 12500 },
+  { name: 'Sales', value: 8200 },
+  { name: 'Marketing', value: 4800 },
+  { name: 'Design', value: 2100 },
+  { name: 'Support', value: 1150 },
 ];
+
+const PRIMARY_COLOR = '#60a5fa'; // Light blue
+const HOVER_COLOR = '#c0c0c0'; // Silver
 
 /**
  * DepartmentChart - Donut chart showing cost distribution across departments.
@@ -93,20 +96,19 @@ export function DepartmentChart() {
               @key: Stable keys prevent unnecessary re-renders
               @opacity: Dim non-active segments on hover
             */}
-            {data.map((entry, index) => (
+            {data.map((_, index) => (
               <Cell 
                 key={`cell-${index}`} 
-                fill={entry.color}
-                opacity={activeIndex === null || activeIndex === index ? 1 : 0.6}
+                fill={activeIndex === index ? HOVER_COLOR : PRIMARY_COLOR}
               />
             ))}
           </Pie>
           <Tooltip
             contentStyle={{
-              backgroundColor: 'hsl(var(--surface))',
-              border: '1px solid hsl(var(--border))',
+              backgroundColor: '#374151',
+              border: '1px solid #6b7280',
               borderRadius: '8px',
-              color: 'hsl(var(--foreground))',
+              color: '#fef3c7',
             }}
             formatter={(value: number) => [`€${value.toLocaleString()}`, '']}
           />

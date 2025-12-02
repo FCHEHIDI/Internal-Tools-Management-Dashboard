@@ -1,0 +1,295 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e3]:
+  - banner [ref=e4]:
+    - generic [ref=e6]:
+      - generic [ref=e7]:
+        - generic [ref=e9]: IT
+        - generic [ref=e10]: TechCorp
+      - navigation [ref=e11]:
+        - link "Dashboard" [ref=e12] [cursor=pointer]:
+          - /url: /
+          - img [ref=e13]
+          - text: Dashboard
+        - link "Tools" [ref=e18] [cursor=pointer]:
+          - /url: /tools
+          - img [ref=e19]
+          - text: Tools
+        - link "Analytics" [ref=e21] [cursor=pointer]:
+          - /url: /analytics
+          - img [ref=e22]
+          - text: Analytics
+        - link "Settings" [ref=e24] [cursor=pointer]:
+          - /url: /settings
+          - img [ref=e25]
+          - text: Settings
+      - generic [ref=e28]:
+        - button "Toggle theme" [ref=e29] [cursor=pointer]:
+          - img [ref=e30]
+        - button "FC" [ref=e32] [cursor=pointer]
+  - main [ref=e33]:
+    - generic [ref=e34]:
+      - generic [ref=e35]:
+        - heading "Dashboard" [level=1] [ref=e36]
+        - paragraph [ref=e37]: Overview of your internal tools and budget
+      - generic [ref=e40]:
+        - img [ref=e43]
+        - img [ref=e50]
+        - button "Dismiss campaign banner" [ref=e52] [cursor=pointer]:
+          - img [ref=e53]
+        - generic [ref=e56]:
+          - generic [ref=e57]:
+            - generic [ref=e58]:
+              - img [ref=e59]
+              - text: NEW
+            - heading "🚀 Q4 Budget Planning is Here" [level=2] [ref=e61]
+            - paragraph [ref=e62]: Review your tool usage and optimize costs for next quarter. Our AI can identify potential savings of up to €15K.
+            - generic [ref=e63]:
+              - button "Add Tool to Review" [ref=e64] [cursor=pointer]:
+                - text: Add Tool to Review
+                - img [ref=e65]
+              - button "Learn About AI Optimizer" [ref=e67] [cursor=pointer]
+          - img [ref=e70]
+      - generic [ref=e75]:
+        - generic [ref=e76]:
+          - img [ref=e78]
+          - generic [ref=e80]:
+            - paragraph [ref=e81]: Total Budget
+            - paragraph [ref=e82]: €28,750
+            - generic [ref=e83]:
+              - img [ref=e84]
+              - generic [ref=e87]: +12%
+        - generic [ref=e88]:
+          - img [ref=e90]
+          - generic [ref=e92]:
+            - paragraph [ref=e93]: Active Tools
+            - paragraph [ref=e94]: "147"
+            - generic [ref=e95]:
+              - img [ref=e96]
+              - generic [ref=e99]: "+8"
+        - generic [ref=e100]:
+          - img [ref=e102]
+          - generic [ref=e106]:
+            - paragraph [ref=e107]: Departments
+            - paragraph [ref=e108]: "8"
+            - generic [ref=e109]:
+              - img [ref=e110]
+              - generic [ref=e113]: "+2"
+        - generic [ref=e114]:
+          - img [ref=e116]
+          - generic [ref=e121]:
+            - paragraph [ref=e122]: Cost per User
+            - paragraph [ref=e123]: €156
+            - generic [ref=e124]:
+              - img [ref=e125]
+              - generic [ref=e128]: +€10
+      - generic [ref=e129]:
+        - generic [ref=e131]:
+          - heading "Recent Tools" [level=2] [ref=e132]
+          - paragraph [ref=e133]: Latest updates to your tool catalog
+        - table [ref=e135]:
+          - rowgroup [ref=e136]:
+            - row "Tool Department Users Monthly Cost Status Last Updated Actions" [ref=e137]:
+              - columnheader "Tool" [ref=e138]:
+                - button "Tool" [ref=e139] [cursor=pointer]:
+                  - text: Tool
+                  - img [ref=e140]
+              - columnheader "Department" [ref=e143]
+              - columnheader "Users" [ref=e144]:
+                - button "Users" [ref=e145] [cursor=pointer]:
+                  - text: Users
+                  - img [ref=e146]
+              - columnheader "Monthly Cost" [ref=e149]:
+                - button "Monthly Cost" [ref=e150] [cursor=pointer]:
+                  - text: Monthly Cost
+                  - img [ref=e151]
+              - columnheader "Status" [ref=e154]
+              - columnheader "Last Updated" [ref=e155]
+              - columnheader "Actions" [ref=e156]
+          - rowgroup [ref=e157]:
+            - row "S Slack Communication Engineering 42 €1,250 +€70 Active Nov 30, 2024" [ref=e158]:
+              - cell "S Slack Communication" [ref=e159]:
+                - generic [ref=e160]:
+                  - generic [ref=e161]: S
+                  - generic [ref=e162]:
+                    - generic [ref=e163]: Slack
+                    - generic [ref=e164]: Communication
+              - cell "Engineering" [ref=e165]
+              - cell "42" [ref=e166]
+              - cell "€1,250 +€70" [ref=e167]:
+                - generic [ref=e168]:
+                  - generic [ref=e169]: €1,250
+                  - generic [ref=e170]: +€70
+              - cell "Active" [ref=e171]:
+                - generic [ref=e172]: Active
+              - cell "Nov 30, 2024" [ref=e173]
+              - cell [ref=e174]:
+                - generic [ref=e175]:
+                  - button "View details" [ref=e176] [cursor=pointer]:
+                    - img [ref=e177]
+                  - button "Edit" [ref=e181] [cursor=pointer]:
+                    - img [ref=e182]
+                  - button "More options" [ref=e185] [cursor=pointer]:
+                    - img [ref=e186]
+            - row "F Figma Design Design 12 €450 Active Nov 29, 2024" [ref=e190]:
+              - cell "F Figma Design" [ref=e191]:
+                - generic [ref=e192]:
+                  - generic [ref=e193]: F
+                  - generic [ref=e194]:
+                    - generic [ref=e195]: Figma
+                    - generic [ref=e196]: Design
+              - cell "Design" [ref=e197]
+              - cell "12" [ref=e198]
+              - cell "€450" [ref=e199]:
+                - generic [ref=e201]: €450
+              - cell "Active" [ref=e202]:
+                - generic [ref=e203]: Active
+              - cell "Nov 29, 2024" [ref=e204]
+              - cell [ref=e205]:
+                - generic [ref=e206]:
+                  - button "View details" [ref=e207] [cursor=pointer]:
+                    - img [ref=e208]
+                  - button "Edit" [ref=e212] [cursor=pointer]:
+                    - img [ref=e213]
+                  - button "More options" [ref=e216] [cursor=pointer]:
+                    - img [ref=e217]
+            - row "J Jira Development Engineering 35 €850 +€50 Active Nov 28, 2024" [ref=e221]:
+              - cell "J Jira Development" [ref=e222]:
+                - generic [ref=e223]:
+                  - generic [ref=e224]: J
+                  - generic [ref=e225]:
+                    - generic [ref=e226]: Jira
+                    - generic [ref=e227]: Development
+              - cell "Engineering" [ref=e228]
+              - cell "35" [ref=e229]
+              - cell "€850 +€50" [ref=e230]:
+                - generic [ref=e231]:
+                  - generic [ref=e232]: €850
+                  - generic [ref=e233]: +€50
+              - cell "Active" [ref=e234]:
+                - generic [ref=e235]: Active
+              - cell "Nov 28, 2024" [ref=e236]
+              - cell [ref=e237]:
+                - generic [ref=e238]:
+                  - button "View details" [ref=e239] [cursor=pointer]:
+                    - img [ref=e240]
+                  - button "Edit" [ref=e244] [cursor=pointer]:
+                    - img [ref=e245]
+                  - button "More options" [ref=e248] [cursor=pointer]:
+                    - img [ref=e249]
+            - row "H HubSpot Marketing Marketing 18 €1,500 Expiring Nov 27, 2024" [ref=e253]:
+              - cell "H HubSpot Marketing" [ref=e254]:
+                - generic [ref=e255]:
+                  - generic [ref=e256]: H
+                  - generic [ref=e257]:
+                    - generic [ref=e258]: HubSpot
+                    - generic [ref=e259]: Marketing
+              - cell "Marketing" [ref=e260]
+              - cell "18" [ref=e261]
+              - cell "€1,500" [ref=e262]:
+                - generic [ref=e264]: €1,500
+              - cell "Expiring" [ref=e265]:
+                - generic [ref=e266]: Expiring
+              - cell "Nov 27, 2024" [ref=e267]
+              - cell [ref=e268]:
+                - generic [ref=e269]:
+                  - button "View details" [ref=e270] [cursor=pointer]:
+                    - img [ref=e271]
+                  - button "Edit" [ref=e275] [cursor=pointer]:
+                    - img [ref=e276]
+                  - button "More options" [ref=e279] [cursor=pointer]:
+                    - img [ref=e280]
+            - row "N Notion Productivity Operations 28 €320 +€40 Active Nov 26, 2024" [ref=e284]:
+              - cell "N Notion Productivity" [ref=e285]:
+                - generic [ref=e286]:
+                  - generic [ref=e287]: "N"
+                  - generic [ref=e288]:
+                    - generic [ref=e289]: Notion
+                    - generic [ref=e290]: Productivity
+              - cell "Operations" [ref=e291]
+              - cell "28" [ref=e292]
+              - cell "€320 +€40" [ref=e293]:
+                - generic [ref=e294]:
+                  - generic [ref=e295]: €320
+                  - generic [ref=e296]: +€40
+              - cell "Active" [ref=e297]:
+                - generic [ref=e298]: Active
+              - cell "Nov 26, 2024" [ref=e299]
+              - cell [ref=e300]:
+                - generic [ref=e301]:
+                  - button "View details" [ref=e302] [cursor=pointer]:
+                    - img [ref=e303]
+                  - button "Edit" [ref=e307] [cursor=pointer]:
+                    - img [ref=e308]
+                  - button "More options" [ref=e311] [cursor=pointer]:
+                    - img [ref=e312]
+            - row "D Datadog Development Engineering 15 €2,100 Active Nov 25, 2024" [ref=e316]:
+              - cell "D Datadog Development" [ref=e317]:
+                - generic [ref=e318]:
+                  - generic [ref=e319]: D
+                  - generic [ref=e320]:
+                    - generic [ref=e321]: Datadog
+                    - generic [ref=e322]: Development
+              - cell "Engineering" [ref=e323]
+              - cell "15" [ref=e324]
+              - cell "€2,100" [ref=e325]:
+                - generic [ref=e327]: €2,100
+              - cell "Active" [ref=e328]:
+                - generic [ref=e329]: Active
+              - cell "Nov 25, 2024" [ref=e330]
+              - cell [ref=e331]:
+                - generic [ref=e332]:
+                  - button "View details" [ref=e333] [cursor=pointer]:
+                    - img [ref=e334]
+                  - button "Edit" [ref=e338] [cursor=pointer]:
+                    - img [ref=e339]
+                  - button "More options" [ref=e342] [cursor=pointer]:
+                    - img [ref=e343]
+            - row "Z Zoom Communication Operations 5 €180 Unused Nov 24, 2024" [ref=e347]:
+              - cell "Z Zoom Communication" [ref=e348]:
+                - generic [ref=e349]:
+                  - generic [ref=e350]: Z
+                  - generic [ref=e351]:
+                    - generic [ref=e352]: Zoom
+                    - generic [ref=e353]: Communication
+              - cell "Operations" [ref=e354]
+              - cell "5" [ref=e355]
+              - cell "€180" [ref=e356]:
+                - generic [ref=e358]: €180
+              - cell "Unused" [ref=e359]:
+                - generic [ref=e360]: Unused
+              - cell "Nov 24, 2024" [ref=e361]
+              - cell [ref=e362]:
+                - generic [ref=e363]:
+                  - button "View details" [ref=e364] [cursor=pointer]:
+                    - img [ref=e365]
+                  - button "Edit" [ref=e369] [cursor=pointer]:
+                    - img [ref=e370]
+                  - button "More options" [ref=e373] [cursor=pointer]:
+                    - img [ref=e374]
+            - row "G GitHub Development Engineering 38 €890 +€40 Active Nov 23, 2024" [ref=e378]:
+              - cell "G GitHub Development" [ref=e379]:
+                - generic [ref=e380]:
+                  - generic [ref=e381]: G
+                  - generic [ref=e382]:
+                    - generic [ref=e383]: GitHub
+                    - generic [ref=e384]: Development
+              - cell "Engineering" [ref=e385]
+              - cell "38" [ref=e386]
+              - cell "€890 +€40" [ref=e387]:
+                - generic [ref=e388]:
+                  - generic [ref=e389]: €890
+                  - generic [ref=e390]: +€40
+              - cell "Active" [ref=e391]:
+                - generic [ref=e392]: Active
+              - cell "Nov 23, 2024" [ref=e393]
+              - cell [ref=e394]:
+                - generic [ref=e395]:
+                  - button "View details" [ref=e396] [cursor=pointer]:
+                    - img [ref=e397]
+                  - button "Edit" [ref=e401] [cursor=pointer]:
+                    - img [ref=e402]
+                  - button "More options" [ref=e405] [cursor=pointer]:
+                    - img [ref=e406]
+```
