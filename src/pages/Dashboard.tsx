@@ -2,6 +2,7 @@ import { TrendingUp, TrendingDown, DollarSign, Wrench, Building2, Users } from '
 import { Card } from '@/components/ui';
 import { formatCurrency } from '@/lib/utils';
 import { RecentToolsTable } from '@/components/features/RecentToolsTable';
+import { AddToolWidget } from '@/components/features/AddToolWidget';
 
 interface KPICardProps {
   title: string;
@@ -75,6 +76,46 @@ export function Dashboard() {
           Overview of your internal tools and budget
         </p>
       </div>
+
+      {/* Add Tool Widget - Modern contextual engagement */}
+      <AddToolWidget
+        user={{
+          name: 'Fares',
+          lastAction: {
+            action: 'Added',
+            toolName: 'Figma',
+            timeAgo: '2 hours ago',
+          },
+          quarterlySavings: 12000,
+        }}
+        campaign={{
+          title: '🚀 Q4 Budget Planning is Here',
+          description: 'Review your tool usage and optimize costs for next quarter. Our AI can identify potential savings of up to €15K.',
+          badge: 'NEW',
+          primaryCta: {
+            label: 'Add Tool to Review',
+            action: 'add-tool' as const,
+          },
+          secondaryCta: {
+            label: 'Learn About AI Optimizer',
+            action: 'learn-more' as const,
+            url: 'https://example.com/ai-optimizer',
+          },
+        }}
+        onSubmit={(data) => {
+          console.log('Tool submitted:', data);
+          // In production: 
+          // - Call API to create tool
+          // - Invalidate React Query cache
+          // - Show success toast
+        }}
+        onDismiss={() => {
+          console.log('Widget dismissed');
+          // In production:
+          // - Store preference in localStorage
+          // - Track dismissal event
+        }}
+      />
 
       {/* KPI Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
