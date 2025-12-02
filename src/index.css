@@ -1,0 +1,78 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Light theme */
+    --background: 0 0% 100%;
+    --background-secondary: 210 40% 98%;
+    --foreground: 222 47% 11%;
+    --foreground-secondary: 215 16% 47%;
+    --surface: 0 0% 100%;
+    --surface-hover: 210 40% 96%;
+    --border: 214 32% 91%;
+    --primary: 262 83% 58%;
+    --secondary: 220 14% 96%;
+    
+    /* Status colors */
+    --status-active: 142 71% 45%;
+    --status-expiring: 38 92% 50%;
+    --status-unused: 0 72% 51%;
+  }
+
+  .dark {
+    /* Dark theme */
+    --background: 222 47% 11%;
+    --background-secondary: 222 47% 15%;
+    --foreground: 210 40% 98%;
+    --foreground-secondary: 215 20% 65%;
+    --surface: 222 47% 15%;
+    --surface-hover: 222 47% 18%;
+    --border: 217 19% 27%;
+    --primary: 262 83% 58%;
+    --secondary: 222 47% 15%;
+    
+    /* Status colors (same in both themes) */
+    --status-active: 142 71% 45%;
+    --status-expiring: 38 92% 50%;
+    --status-unused: 0 72% 51%;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans;
+    font-feature-settings: 'rlig' 1, 'calt' 1;
+  }
+}
+
+@layer components {
+  /* Custom scrollbar */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-border rounded-full;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    @apply bg-foreground-secondary;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
