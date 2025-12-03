@@ -1,5 +1,6 @@
-import { TrendingUp, TrendingDown, DollarSign, Wrench, Building2, Users } from 'lucide-react';
-import { Card } from '@/components/ui';
+import { useState } from 'react';
+import { TrendingUp, TrendingDown, DollarSign, Wrench, Building2, Users, Search } from 'lucide-react';
+import { Card, Input } from '@/components/ui';
 import { formatCurrency } from '@/lib/utils';
 import { RecentToolsTable } from '@/components/features/RecentToolsTable';
 import { AddToolWidget } from '@/components/features/AddToolWidget';
@@ -35,6 +36,12 @@ function KPICard({ title, value, trend, gradient, icon }: KPICardProps) {
 }
 
 export function Dashboard() {
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+  };
+
   // Mock data - will be replaced with real API data
   const kpis = [
     {
@@ -134,7 +141,22 @@ export function Dashboard() {
             </p>
           </div>
         </div>
-        <RecentToolsTable />
+        
+        {/* Search Bar */}
+        <div className="mb-4">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground-secondary" />
+            <Input
+              type="text"
+              placeholder="Search recent tools..."
+              className="pl-10"
+              value={searchQuery}
+              onChange={handleSearch}
+            />
+          </div>
+        </div>
+        
+        <RecentToolsTable searchQuery={searchQuery} />
       </div>
     </div>
   );

@@ -4,11 +4,13 @@ import { formatCurrency, formatDate } from '@/lib/utils';
 import { useTools } from '@/hooks';
 import { useModalStore } from '@/stores';
 import { Tool } from '@/types';
+import { useMemo } from 'react';
 
 /**
  * RecentToolsTable - Dashboard table showing recently updated tools.
  * 
  * @component
+ * @param {string} searchQuery - Optional search query to filter tools
  * @returns {JSX.Element} Responsive table with 8 most recent tools
  * 
  * @purpose Dashboard quick overview
@@ -20,6 +22,7 @@ import { Tool } from '@/types';
  * - Sortable columns (visual indicators present)
  * - Action buttons (view, edit, delete)
  * - Responsive formatting using utility functions
+ * - Search filtering by name, category, or department
  * 
  * @ux-decisions
  * - Limited to 8 tools: Dashboard preview, not exhaustive list
@@ -32,7 +35,12 @@ import { Tool } from '@/types';
  * - formatDate(): Relative time formatting ("2 days ago")
  * - calculatePercentageChange(): Cost trend calculation
  */
-export function RecentToolsTable() {
+
+interface RecentToolsTableProps {
+  searchQuery?: string;
+}
+
+export function RecentToolsTable({ searchQuery = '' }: RecentToolsTableProps) {
   // Fetch 8 most recently updated tools
   const { data: toolsResponse, isLoading, error } = useTools({
     _limit: 8,
@@ -41,6 +49,22 @@ export function RecentToolsTable() {
   });
 
   const { openToolDetails, openEditToolModal } = useModalStore();
+
+  // Filter tools based on search query
+  const filteredTools = useMemo(() => {
+    const tools = toolsResponse?.data || [];
+    
+    if (!searchQuery.trim()) {
+      return tools;
+    }
+
+    const query = searchQuery.toLowerCase();
+    return tools.filter((tool) => 
+      tool.name.toLowerCase().includes(query) ||
+      tool.category.toLowerCase().includes(query) ||
+      tool.department.toLowerCase().includes(query)
+    );
+  }, [toolsResponse, searchQuery]);
 
   const handleViewDetails = (tool: Tool) => {
     openToolDetails(tool.id);
@@ -66,8 +90,6 @@ export function RecentToolsTable() {
   if (error) {
     return <ErrorMessage message="Failed to load recent tools." />;
   }
-
-  const tools = toolsResponse?.data || [];
 
   return (
     <Table>
@@ -98,7 +120,7 @@ export function RecentToolsTable() {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {tools.map((tool) => (
+        {filteredTools.map((tool) => (
           <TableRow key={tool.id}>
             <TableCell>
               <div className="flex items-center gap-3">

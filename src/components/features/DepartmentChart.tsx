@@ -71,6 +71,7 @@ export function DepartmentChart() {
             outerRadius={activeIndex !== null ? 105 : 100} // Expand on hover
             paddingAngle={2} // Visual separation between segments
             dataKey="value" // Which field contains the numeric data
+            nameKey="name" // Which field contains the department name
             label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
             onMouseEnter={onPieEnter}
             onMouseLeave={onPieLeave}
@@ -95,9 +96,18 @@ export function DepartmentChart() {
               backgroundColor: '#374151',
               border: '1px solid #6b7280',
               borderRadius: '8px',
-              color: '#fef3c7',
+              fontSize: '10px',
             }}
-            formatter={(value: number) => [`€${value.toLocaleString()}`, '']}
+            itemStyle={{
+              color: '#fef3c7',
+              fontSize: '10px',
+            }}
+            labelStyle={{
+              color: '#fef3c7',
+              fontSize: '10px',
+            }}
+            formatter={(value: number, name: string) => [`€${value.toLocaleString()}`]}
+            labelFormatter={(name: string) => name}
           />
           <Legend
             verticalAlign="bottom"

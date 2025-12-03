@@ -1,10 +1,17 @@
-import { TrendingUp, DollarSign, Users, BarChart3 } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui';
+import { useState } from 'react';
+import { TrendingUp, DollarSign, Users, BarChart3, Search } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle, Input } from '@/components/ui';
 import { CostChart } from '@/components/features/CostChart';
 import { DepartmentChart } from '@/components/features/DepartmentChart';
 import { UsageChart } from '@/components/features/UsageChart';
 
 export function Analytics() {
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+  };
+
   return (
     <div className="space-y-8">
       {/* Header */}
@@ -13,6 +20,18 @@ export function Analytics() {
         <p className="text-foreground-secondary mt-2">
           Insights and analytics for your tools usage and spending
         </p>
+      </div>
+
+      {/* Search Bar */}
+      <div className="relative max-w-md">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground-secondary" />
+        <Input
+          type="text"
+          placeholder="Search analytics data..."
+          className="pl-10"
+          value={searchQuery}
+          onChange={handleSearch}
+        />
       </div>
 
       {/* Quick Stats */}

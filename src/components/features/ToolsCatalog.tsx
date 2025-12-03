@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { ExternalLink, Edit, Trash2, Users, DollarSign } from 'lucide-react';
 import { Card, Badge, LoadingSpinner, ErrorMessage } from '@/components/ui';
 import { formatCurrency } from '@/lib/utils';
@@ -11,6 +11,8 @@ interface ToolsCatalogProps {
     categories: string[];
     departments: string[];
     status: string[];
+    minCost?: number | null;
+    maxCost?: number | null;
   };
 }
 
@@ -21,16 +23,11 @@ export function ToolsCatalog({ searchQuery = '', filters }: ToolsCatalogProps) {
   const [sortBy, setSortBy] = useState('updated_at');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
 
-  // Fetch tools with filters
+  // Fetch ALL tools and filter client-side for better multi-filter support
   const { data: toolsResponse, isLoading, error } = useTools({
-    _page: currentPage,
-    _limit: ITEMS_PER_PAGE,
+    _limit: 1000, // Get all tools
     _sort: sortBy,
     _order: sortOrder,
-    q: searchQuery || undefined,
-    category: filters?.categories.length ? filters.categories[0] : undefined,
-    owner_department: filters?.departments.length ? filters.departments[0] : undefined,
-    status: filters?.status.length ? filters.status[0] : undefined,
   });
 
   const { openEditToolModal, openDeleteConfirm, openToolDetails } = useModalStore();
@@ -39,6 +36,60 @@ export function ToolsCatalog({ searchQuery = '', filters }: ToolsCatalogProps) {
   useEffect(() => {
     setCurrentPage(1);
   }, [searchQuery, filters]);
+
+  // Client-side filtering
+  const filteredTools = useMemo(() => {
+    let tools = toolsResponse?.data || [];
+
+    // Apply search query
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      tools = tools.filter(tool =>
+        tool.name.toLowerCase().includes(query) ||
+        tool.category?.toLowerCase().includes(query) ||
+        tool.owner_department?.toLowerCase().includes(query) ||
+        tool.description?.toLowerCase().includes(query)
+      );
+    }
+
+    // Apply category filter (multi-select)
+    if (filters?.categories && filters.categories.length > 0) {
+      tools = tools.filter(tool => 
+        filters.categories.some(cat => tool.category?.toLowerCase() === cat.toLowerCase())
+      );
+    }
+
+    // Apply department filter (multi-select)
+    if (filters?.departments && filters.departments.length > 0) {
+      tools = tools.filter(tool => 
+        filters.departments.some(dept => tool.owner_department?.toLowerCase() === dept.toLowerCase())
+      );
+    }
+
+    // Apply status filter (multi-select)
+    if (filters?.status && filters.status.length > 0) {
+      tools = tools.filter(tool => 
+        filters.status.includes(tool.status)
+      );
+    }
+
+    // Apply cost range filter
+    if (filters?.minCost !== null && filters?.minCost !== undefined) {
+      tools = tools.filter(tool => tool.monthly_cost >= filters.minCost!);
+    }
+    if (filters?.maxCost !== null && filters?.maxCost !== undefined) {
+      tools = tools.filter(tool => tool.monthly_cost <= filters.maxCost!);
+    }
+
+    return tools;
+  }, [toolsResponse?.data, searchQuery, filters]);
+
+  // Pagination on filtered results
+  const totalItems = filteredTools.length;
+  const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const endIndex = startIndex + ITEMS_PER_PAGE;
+  const paginatedTools = filteredTools.slice(startIndex, endIndex);
 
   const handleSort = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value;
@@ -72,11 +123,6 @@ export function ToolsCatalog({ searchQuery = '', filters }: ToolsCatalogProps) {
   if (error) {
     return <ErrorMessage message="Failed to load tools. Please try again." />;
   }
-
-  const tools = toolsResponse?.data || [];
-  const totalItems = toolsResponse?.total || 0;
-  const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
-  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
 
   // Generate page numbers array
   const getPageNumbers = () => {
@@ -131,7 +177,7 @@ export function ToolsCatalog({ searchQuery = '', filters }: ToolsCatalogProps) {
 
       {/* Tools Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {tools.map((tool) => (
+        {paginatedTools.map((tool) => (
           <Card key={tool.id} className="p-6 hover:shadow-xl transition-shadow">
             <div className="flex items-start justify-between">
               <div className="flex items-center gap-3 flex-1">
@@ -201,7 +247,7 @@ export function ToolsCatalog({ searchQuery = '', filters }: ToolsCatalogProps) {
       </div>
 
       {/* Empty State */}
-      {tools.length === 0 && (
+      {paginatedTools.length === 0 && (
         <div className="text-center py-12">
           <p className="text-foreground-secondary">No tools found matching your criteria.</p>
         </div>

@@ -9,7 +9,7 @@ export function Tools() {
   const [showFilters, setShowFilters] = useState(true);
   
   // Use Zustand stores
-  const { searchQuery, setSearchQuery, selectedCategories, selectedDepartments, selectedStatus } = useFiltersStore();
+  const { searchQuery, setSearchQuery, selectedCategories, selectedDepartments, selectedStatus, minCost, maxCost } = useFiltersStore();
   const { openAddToolModal } = useModalStore();
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -71,6 +71,8 @@ export function Tools() {
               categories: selectedCategories,
               departments: selectedDepartments,
               status: selectedStatus,
+              minCost,
+              maxCost,
             }}
           />
         </div>

@@ -67,9 +67,17 @@ export function CostChart() {
               backgroundColor: '#374151',
               border: '1px solid #6b7280',
               borderRadius: '8px',
-              color: '#fef3c7',
+              fontSize: '10px',
             }}
-            formatter={(value: number) => [`€${value.toLocaleString()}`, '']}
+            itemStyle={{
+              color: '#fef3c7',
+              fontSize: '10px',
+            }}
+            labelStyle={{
+              color: '#fef3c7',
+              fontSize: '10px',
+            }}
+            formatter={(value: number) => [`€${value.toLocaleString()}`]}
           />
           
           {/* Legend: Identifies which line represents what */}

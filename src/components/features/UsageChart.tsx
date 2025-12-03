@@ -96,11 +96,19 @@ export function UsageChart() {
               backgroundColor: '#374151',
               border: '1px solid #6b7280',
               borderRadius: '8px',
+              fontSize: '10px',
+            }}
+            itemStyle={{
               color: '#fef3c7',
+              fontSize: '10px',
+            }}
+            labelStyle={{
+              color: '#fef3c7',
+              fontSize: '10px',
             }}
             formatter={(value: number, name: string) => {
-              if (name === 'users') return [`${value} users`, 'Active Users'];
-              return [`€${value.toLocaleString()}`, 'Monthly Cost'];
+              if (name === 'users') return [`${value} users`];
+              return [`\u20ac${value.toLocaleString()}`];
             }}
           />
           

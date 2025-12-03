@@ -21,6 +21,12 @@ interface FiltersState {
   toggleStatus: (status: string) => void;
   clearStatus: () => void;
 
+  // Cost Range
+  minCost: number | null;
+  maxCost: number | null;
+  setMinCost: (cost: number | null) => void;
+  setMaxCost: (cost: number | null) => void;
+
   // Clear all filters
   clearAllFilters: () => void;
 }
@@ -33,6 +39,8 @@ export const useFiltersStore = create<FiltersState>()(
       selectedCategories: [],
       selectedDepartments: [],
       selectedStatus: [],
+      minCost: null,
+      maxCost: null,
 
       // Actions
       setSearchQuery: (query) => set({ searchQuery: query }),
@@ -64,12 +72,17 @@ export const useFiltersStore = create<FiltersState>()(
 
       clearStatus: () => set({ selectedStatus: [] }),
 
+      setMinCost: (cost) => set({ minCost: cost }),
+      setMaxCost: (cost) => set({ maxCost: cost }),
+
       clearAllFilters: () =>
         set({
           searchQuery: '',
           selectedCategories: [],
           selectedDepartments: [],
           selectedStatus: [],
+          minCost: null,
+          maxCost: null,
         }),
     }),
     {
@@ -78,6 +91,8 @@ export const useFiltersStore = create<FiltersState>()(
         selectedCategories: state.selectedCategories,
         selectedDepartments: state.selectedDepartments,
         selectedStatus: state.selectedStatus,
+        minCost: state.minCost,
+        maxCost: state.maxCost,
       }),
     }
   )
