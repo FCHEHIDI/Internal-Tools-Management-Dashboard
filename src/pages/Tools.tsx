@@ -3,23 +3,21 @@ import { Plus, Search, Filter } from 'lucide-react';
 import { Button, Input } from '@/components/ui';
 import { ToolsFilters } from '@/components/features/ToolsFilters';
 import { ToolsCatalog } from '@/components/features/ToolsCatalog';
+import { useFiltersStore, useModalStore } from '@/stores';
 
 export function Tools() {
-  const [searchQuery, setSearchQuery] = useState('');
   const [showFilters, setShowFilters] = useState(true);
-  const [selectedFilters, setSelectedFilters] = useState({
-    categories: [] as string[],
-    departments: [] as string[],
-    status: [] as string[],
-  });
+  
+  // Use Zustand stores
+  const { searchQuery, setSearchQuery, selectedCategories, selectedDepartments, selectedStatus } = useFiltersStore();
+  const { openAddToolModal } = useModalStore();
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
   };
 
   const handleAddTool = () => {
-    console.log('Add tool clicked');
-    // In production: open add tool modal or navigate to add page
+    openAddToolModal();
   };
 
   return (
@@ -61,21 +59,22 @@ export function Tools() {
 
       {/* Filters Sidebar and Catalog */}
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+      {/* Filters Sidebar and Catalog */}
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         {showFilters && (
           <div className="lg:col-span-1">
-            <ToolsFilters 
-              selectedFilters={selectedFilters}
-              onFilterChange={setSelectedFilters}
-            />
+            <ToolsFilters />
           </div>
         )}
         <div className={showFilters ? "lg:col-span-3" : "lg:col-span-4"}>
           <ToolsCatalog 
             searchQuery={searchQuery}
-            filters={selectedFilters}
+            filters={{
+              categories: selectedCategories,
+              departments: selectedDepartments,
+              status: selectedStatus,
+            }}
           />
         </div>
       </div>
-    </div>
-  );
 }

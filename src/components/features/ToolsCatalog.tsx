@@ -1,8 +1,9 @@
-import { useState, useMemo } from 'react';
-import { ExternalLink, Edit, Trash2, Users, DollarSign } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { ExternalLink, Edit, Trash2, Users, DollarSign, Loader2 } from 'lucide-react';
 import { Card, Badge } from '@/components/ui';
 import { formatCurrency } from '@/lib/utils';
-import { Tool } from '@/types';
+import { useTools } from '@/hooks';
+import { useModalStore } from '@/stores';
 
 interface ToolsCatalogProps {
   searchQuery?: string;
@@ -13,154 +14,78 @@ interface ToolsCatalogProps {
   };
 }
 
-// Mock data - will be replaced with API
-const mockTools: Tool[] = [
-  {
-    id: 1,
-    name: 'Slack',
-    description: 'Team communication and collaboration platform for messaging and file sharing',
-    vendor: 'Slack Technologies',
-    category: 'Communication',
-    monthly_cost: 1250,
-    previous_month_cost: 1180,
-    owner_department: 'Engineering',
-    status: 'active',
-    website_url: 'https://slack.com',
-    active_users_count: 42,
-    icon_url: '',
-    created_at: '2023-01-10T08:00:00Z',
-    updated_at: '2024-11-30T15:30:00Z',
-  },
-  {
-    id: 2,
-    name: 'Figma',
-    description: 'Collaborative design and prototyping tool for UI/UX designers',
-    vendor: 'Figma Inc',
-    category: 'Design',
-    monthly_cost: 450,
-    previous_month_cost: 450,
-    owner_department: 'Design',
-    status: 'active',
-    website_url: 'https://figma.com',
-    active_users_count: 12,
-    icon_url: '',
-    created_at: '2023-02-15T10:00:00Z',
-    updated_at: '2024-11-29T12:00:00Z',
-  },
-  {
-    id: 3,
-    name: 'Jira',
-    description: 'Project management and issue tracking for agile teams',
-    vendor: 'Atlassian',
-    category: 'Development',
-    monthly_cost: 850,
-    previous_month_cost: 800,
-    owner_department: 'Engineering',
-    status: 'active',
-    website_url: 'https://jira.com',
-    active_users_count: 35,
-    icon_url: '',
-    created_at: '2023-01-05T09:00:00Z',
-    updated_at: '2024-11-28T14:20:00Z',
-  },
-  {
-    id: 4,
-    name: 'HubSpot',
-    description: 'CRM and marketing automation platform',
-    vendor: 'HubSpot',
-    category: 'Marketing',
-    monthly_cost: 1500,
-    previous_month_cost: 1500,
-    owner_department: 'Marketing',
-    status: 'expiring',
-    website_url: 'https://hubspot.com',
-    active_users_count: 18,
-    icon_url: '',
-    created_at: '2023-03-20T11:00:00Z',
-    updated_at: '2024-11-27T16:45:00Z',
-  },
-  {
-    id: 5,
-    name: 'Notion',
-    description: 'All-in-one workspace for notes, docs, and collaboration',
-    vendor: 'Notion Labs',
-    category: 'Productivity',
-    monthly_cost: 320,
-    previous_month_cost: 280,
-    owner_department: 'Operations',
-    status: 'active',
-    website_url: 'https://notion.so',
-    active_users_count: 28,
-    icon_url: '',
-    created_at: '2023-04-10T08:30:00Z',
-    updated_at: '2024-11-26T10:15:00Z',
-  },
-  {
-    id: 6,
-    name: 'Datadog',
-    description: 'Monitoring and analytics platform for infrastructure and applications',
-    vendor: 'Datadog Inc',
-    category: 'Development',
-    monthly_cost: 2100,
-    previous_month_cost: 2100,
-    owner_department: 'Engineering',
-    status: 'active',
-    website_url: 'https://datadog.com',
-    active_users_count: 15,
-    icon_url: '',
-    created_at: '2023-02-01T07:00:00Z',
-    updated_at: '2024-11-25T13:30:00Z',
-  },
-];
-
-const ITEMS_PER_PAGE = 6;
+const ITEMS_PER_PAGE = 12;
 
 export function ToolsCatalog({ searchQuery = '', filters }: ToolsCatalogProps) {
   const [currentPage, setCurrentPage] = useState(1);
-  
-  // Filter and search tools
-  const filteredTools = useMemo(() => {
-    let result = mockTools;
+  const [sortBy, setSortBy] = useState('updated_at');
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
 
-    // Apply search
-    if (searchQuery) {
-      const query = searchQuery.toLowerCase();
-      result = result.filter(tool =>
-        tool.name.toLowerCase().includes(query) ||
-        tool.category.toLowerCase().includes(query) ||
-        tool.owner_department.toLowerCase().includes(query) ||
-        tool.description.toLowerCase().includes(query)
-      );
-    }
+  // Fetch tools with filters
+  const { data: toolsResponse, isLoading, error } = useTools({
+    _page: currentPage,
+    _limit: ITEMS_PER_PAGE,
+    _sort: sortBy,
+    _order: sortOrder,
+    q: searchQuery || undefined,
+    category: filters?.categories.length ? filters.categories[0] : undefined,
+    owner_department: filters?.departments.length ? filters.departments[0] : undefined,
+    status: filters?.status.length ? filters.status[0] : undefined,
+  });
 
-    // Apply filters
-    if (filters) {
-      if (filters.categories.length > 0) {
-        result = result.filter(tool => filters.categories.includes(tool.category));
-      }
-      if (filters.departments.length > 0) {
-        result = result.filter(tool => filters.departments.includes(tool.owner_department));
-      }
-      if (filters.status.length > 0) {
-        result = result.filter(tool => filters.status.includes(tool.status));
-      }
-    }
+  const { openEditToolModal, openDeleteConfirm, openToolDetails } = useModalStore();
 
-    return result;
-  }, [searchQuery, filters]);
-  
-  // Calculate pagination
-  const totalItems = filteredTools.length;
-  const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
-  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-  const endIndex = startIndex + ITEMS_PER_PAGE;
-  const currentTools = filteredTools.slice(startIndex, endIndex);
-  
   // Reset to page 1 when filters change
-  useMemo(() => {
+  useEffect(() => {
     setCurrentPage(1);
   }, [searchQuery, filters]);
-  
+
+  const handleSort = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = e.target.value;
+    switch (value) {
+      case 'name-asc':
+        setSortBy('name');
+        setSortOrder('asc');
+        break;
+      case 'cost-desc':
+        setSortBy('monthly_cost');
+        setSortOrder('desc');
+        break;
+      case 'cost-asc':
+        setSortBy('monthly_cost');
+        setSortOrder('asc');
+        break;
+      case 'users-desc':
+        setSortBy('active_users_count');
+        setSortOrder('desc');
+        break;
+      default:
+        setSortBy('updated_at');
+        setSortOrder('desc');
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="text-center py-12">
+        <p className="text-status-unused">Error loading tools. Please try again.</p>
+      </div>
+    );
+  }
+
+  const tools = toolsResponse?.data || [];
+  const totalItems = toolsResponse?.total || 0;
+  const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+
   // Generate page numbers array
   const getPageNumbers = () => {
     const pages: (number | string)[] = [];
@@ -192,26 +117,29 @@ export function ToolsCatalog({ searchQuery = '', filters }: ToolsCatalogProps) {
     
     return pages;
   };
-  
+
   return (
     <div>
       {/* Header with count */}
       <div className="flex items-center justify-between mb-4">
         <p className="text-sm text-foreground-secondary">
-          Showing <span className="font-medium text-foreground">{startIndex + 1}-{Math.min(endIndex, totalItems)}</span> of <span className="font-medium text-foreground">{totalItems}</span> tools
+          Showing <span className="font-medium text-foreground">{startIndex + 1}-{Math.min(startIndex + ITEMS_PER_PAGE, totalItems)}</span> of <span className="font-medium text-foreground">{totalItems}</span> tools
         </p>
-        <select className="px-3 py-2 bg-surface border border-border rounded-lg text-sm text-foreground">
-          <option>Sort by: Recently Updated</option>
-          <option>Sort by: Name (A-Z)</option>
-          <option>Sort by: Cost (High to Low)</option>
-          <option>Sort by: Cost (Low to High)</option>
-          <option>Sort by: Users (Most to Least)</option>
+        <select 
+          className="px-3 py-2 bg-surface border border-border rounded-lg text-sm text-foreground"
+          onChange={handleSort}
+        >
+          <option value="updated-desc">Sort by: Recently Updated</option>
+          <option value="name-asc">Sort by: Name (A-Z)</option>
+          <option value="cost-desc">Sort by: Cost (High to Low)</option>
+          <option value="cost-asc">Sort by: Cost (Low to High)</option>
+          <option value="users-desc">Sort by: Users (Most to Least)</option>
         </select>
       </div>
 
       {/* Tools Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {currentTools.map((tool) => (
+        {tools.map((tool) => (
           <Card key={tool.id} className="p-6 hover:shadow-xl transition-shadow">
             <div className="flex items-start justify-between">
               <div className="flex items-center gap-3 flex-1">
@@ -230,19 +158,22 @@ export function ToolsCatalog({ searchQuery = '', filters }: ToolsCatalogProps) {
               </div>
               <div className="flex items-center gap-1">
                 <button
-                  className="p-2 hover:bg-surface-hover rounded-lg transition-colors"
+                  onClick={() => openToolDetails(tool.id)}
+                  className="p-2 hover:bg-surface-hover rounded-lg transition-colors hover:text-primary"
                   title="View details"
                 >
-                  <ExternalLink className="w-4 h-4 text-foreground-secondary" />
+                  <ExternalLink className="w-4 h-4" />
                 </button>
                 <button
-                  className="p-2 hover:bg-surface-hover rounded-lg transition-colors"
+                  onClick={() => openEditToolModal(tool.id)}
+                  className="p-2 hover:bg-surface-hover rounded-lg transition-colors hover:text-primary"
                   title="Edit"
                 >
-                  <Edit className="w-4 h-4 text-foreground-secondary" />
+                  <Edit className="w-4 h-4" />
                 </button>
                 <button
-                  className="p-2 hover:bg-surface-hover rounded-lg transition-colors text-status-unused"
+                  onClick={() => openDeleteConfirm(tool.id)}
+                  className="p-2 hover:bg-surface-hover rounded-lg transition-colors text-status-unused hover:text-red-600"
                   title="Delete"
                 >
                   <Trash2 className="w-4 h-4" />
@@ -276,6 +207,13 @@ export function ToolsCatalog({ searchQuery = '', filters }: ToolsCatalogProps) {
           </Card>
         ))}
       </div>
+
+      {/* Empty State */}
+      {tools.length === 0 && (
+        <div className="text-center py-12">
+          <p className="text-foreground-secondary">No tools found matching your criteria.</p>
+        </div>
+      )}
 
       {/* Pagination */}
       {totalPages > 1 && (

@@ -1,17 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle, Label, Badge } from '@/components/ui';
-
-interface ToolsFiltersProps {
-  selectedFilters: {
-    categories: string[];
-    departments: string[];
-    status: string[];
-  };
-  onFilterChange: (filters: {
-    categories: string[];
-    departments: string[];
-    status: string[];
-  }) => void;
-}
+import { useFiltersStore } from '@/stores';
 
 /**
  * ToolsFilters - Sidebar filter component for the tools catalog.
@@ -19,17 +7,16 @@ interface ToolsFiltersProps {
  * @component
  * @returns {JSX.Element} Multi-category filter sidebar
  * 
- * @architecture Currently uses controlled component pattern
- * Production should integrate with:
- * - Zustand store for global filter state
+ * @architecture Uses Zustand store for global filter state
+ * Production enhancements:
  * - URL search params for shareable filtered views
  * - TanStack Query for dynamic count updates
  * 
  * @filter-strategy
  * - Status: Radio behavior (single selection, toggle off)
  * - Department: Radio behavior (single selection, toggle off)
- * - Category: Multi-select checkboxes (future)
- * - Cost Range: Numeric range inputs
+ * - Category: Multi-select checkboxes
+ * - Cost Range: Numeric range inputs (future)
  * 
  * @ux-patterns
  * - Counts next to options (transparency, prevent dead ends)
@@ -37,36 +24,16 @@ interface ToolsFiltersProps {
  * - Toggle behavior (click again to deselect)
  * - Sticky sidebar (remains visible during scroll - future)
  */
-export function ToolsFilters({ selectedFilters, onFilterChange }: ToolsFiltersProps) {
-  /**
-   * Toggle status filter
-   */
-  const toggleStatus = (value: string) => {
-    const newStatus = selectedFilters.status.includes(value)
-      ? []
-      : [value];
-    onFilterChange({ ...selectedFilters, status: newStatus });
-  };
-
-  /**
-   * Toggle department filter
-   */
-  const toggleDepartment = (value: string) => {
-    const newDepartments = selectedFilters.departments.includes(value)
-      ? []
-      : [value];
-    onFilterChange({ ...selectedFilters, departments: newDepartments });
-  };
-
-  /**
-   * Toggle category filter
-   */
-  const toggleCategory = (value: string) => {
-    const newCategories = selectedFilters.categories.includes(value)
-      ? selectedFilters.categories.filter(c => c !== value)
-      : [...selectedFilters.categories, value];
-    onFilterChange({ ...selectedFilters, categories: newCategories });
-  };
+export function ToolsFilters() {
+  const { 
+    selectedCategories, 
+    selectedDepartments, 
+    selectedStatus,
+    toggleCategory,
+    toggleDepartment,
+    toggleStatus,
+    clearAllFilters
+  } = useFiltersStore();
 
   /**
    * Filter option arrays with counts.
@@ -122,7 +89,7 @@ export function ToolsFilters({ selectedFilters, onFilterChange }: ToolsFiltersPr
               key={status.value}
               onClick={() => toggleStatus(status.value)}
               className={`w-full flex items-center justify-between p-2 rounded-lg transition-colors ${
-                selectedFilters.status.includes(status.value)
+                selectedStatus.includes(status.value)
                   ? 'bg-primary/10 text-primary' // Active: Primary accent
                   : 'hover:bg-surface-hover' // Hover: Subtle background
               }`}
@@ -153,7 +120,7 @@ export function ToolsFilters({ selectedFilters, onFilterChange }: ToolsFiltersPr
               key={dept.value}
               onClick={() => toggleDepartment(dept.value)}
               className={`w-full flex items-center justify-between p-2 rounded-lg transition-colors ${
-                selectedFilters.departments.includes(dept.value)
+                selectedDepartments.includes(dept.value)
                   ? 'bg-primary/10 text-primary'
                   : 'hover:bg-surface-hover'
               }`}
@@ -178,7 +145,7 @@ export function ToolsFilters({ selectedFilters, onFilterChange }: ToolsFiltersPr
               key={category.value}
               onClick={() => toggleCategory(category.value)}
               className={`w-full flex items-center justify-between p-2 rounded-lg transition-colors ${
-                selectedFilters.categories.includes(category.value)
+                selectedCategories.includes(category.value)
                   ? 'bg-primary/10 text-primary'
                   : 'hover:bg-surface-hover'
               }`}
