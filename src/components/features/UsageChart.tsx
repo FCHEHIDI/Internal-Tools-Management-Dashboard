@@ -1,37 +1,8 @@
 import { useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
+import { Loader2 } from 'lucide-react';
+import { useTopTools } from '@/hooks';
 
-/**
- * Top tools by active user count.
- * 
- * @production Data source:
- * - API: GET /api/analytics/top-tools?sortBy=users&limit=6
- * - Calculated from: users_count field in tools table
- * - Could filter by: department, date range, status
- * 
- * @sorting Intentionally sorted by user count descending
- * Shows most-adopted tools first (key insight for stakeholders)
- * 
- * @insight This data helps identify:
- * - Which tools have high adoption (ROI indicators)
- * - Cost per user efficiency (cost / users ratio)
- * - Potential consolidation opportunities (overlapping tools)
- */
-const data = [
-  { name: 'Slack', users: 156, cost: 5890 },
-  { name: 'GitHub', users: 124, cost: 4250 },
-  { name: 'Figma', users: 89, cost: 3780 },
-  { name: 'Jira', users: 78, cost: 3200 },
-  { name: 'Notion', users: 145, cost: 2950 },
-  { name: 'Zoom', users: 156, cost: 2750 },
-];
-
-/**
- * Static color scheme with hover highlight.
- * 
- * @design-system Single color for consistency, silver for hover feedback
- * @pattern Clean, professional appearance
- */
 const PRIMARY_COLOR = '#60a5fa'; // Light blue
 const HOVER_COLOR = '#c0c0c0'; // Silver
 
@@ -52,6 +23,7 @@ const HOVER_COLOR = '#c0c0c0'; // Silver
  */
 export function UsageChart() {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const { data: topToolsData, isLoading, error } = useTopTools(6);
 
   const onBarEnter = (_: unknown, index: number) => {
     setActiveIndex(index);
@@ -62,6 +34,29 @@ export function UsageChart() {
   };
 
   const onClick = (data: unknown) => {
+    const bar = data as { name: string; users: number; cost: number };
+    console.log('Selected tool:', bar.name, 'Users:', bar.users);
+  };
+
+  if (isLoading) {
+    return (
+      <div className="h-[300px] flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  if (error || !topToolsData) {
+    return (
+      <div className="h-[300px] flex items-center justify-center">
+        <p className="text-status-unused">Error loading usage data</p>
+      </div>
+    );
+  }
+
+  const data = topToolsData;
+
+  const handleClick = (data: unknown) => {
     const bar = data as { name: string; users: number; cost: number };
     console.log('Selected tool:', bar.name, 'Users:', bar.users);
     // In production: navigate to tool details, show breakdown, filter views
@@ -136,7 +131,7 @@ export function UsageChart() {
             radius={[0, 8, 8, 0]}
             onMouseEnter={onBarEnter}
             onMouseLeave={onBarLeave}
-            onClick={onClick}
+            onClick={handleClick}
             style={{ cursor: 'pointer' }}
           >
             {data.map((_, index) => (

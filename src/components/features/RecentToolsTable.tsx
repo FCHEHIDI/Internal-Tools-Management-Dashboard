@@ -1,150 +1,9 @@
-import { ArrowUpDown, MoreVertical, ExternalLink, Edit } from 'lucide-react';
+import { ArrowUpDown, MoreVertical, ExternalLink, Edit, Loader2 } from 'lucide-react';
 import { Badge, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui';
 import { formatCurrency, formatDate } from '@/lib/utils';
+import { useTools } from '@/hooks';
+import { useModalStore } from '@/stores';
 import { Tool } from '@/types';
-
-/**
- * Mock data for recent tools display.
- * 
- * @production Replace with:
- * - API: GET /api/tools?sortBy=updatedAt&order=desc&limit=8
- * - TanStack Query: useQuery(['recent-tools'])
- * - Real-time updates via WebSocket for collaborative environments
- * 
- * @type {Tool[]} - Follows the Tool interface from @/types
- * @data-integrity Each tool has complete data including cost change tracking
- */
-// Mock data - will be replaced with API data
-const mockTools: Tool[] = [
-  {
-    id: 1,
-    name: 'Slack',
-    description: 'Team communication platform',
-    vendor: 'Slack Technologies',
-    category: 'Communication',
-    monthly_cost: 1250,
-    previous_month_cost: 1180,
-    owner_department: 'Engineering',
-    status: 'active',
-    website_url: 'https://slack.com',
-    active_users_count: 42,
-    icon_url: '',
-    created_at: '2023-01-10T08:00:00Z',
-    updated_at: '2024-11-30T15:30:00Z',
-  },
-  {
-    id: 2,
-    name: 'Figma',
-    description: 'Design and prototyping tool',
-    vendor: 'Figma Inc',
-    category: 'Design',
-    monthly_cost: 450,
-    previous_month_cost: 450,
-    owner_department: 'Design',
-    status: 'active',
-    website_url: 'https://figma.com',
-    active_users_count: 12,
-    icon_url: '',
-    created_at: '2023-02-15T10:00:00Z',
-    updated_at: '2024-11-29T12:00:00Z',
-  },
-  {
-    id: 3,
-    name: 'Jira',
-    description: 'Project management tool',
-    vendor: 'Atlassian',
-    category: 'Development',
-    monthly_cost: 850,
-    previous_month_cost: 800,
-    owner_department: 'Engineering',
-    status: 'active',
-    website_url: 'https://jira.com',
-    active_users_count: 35,
-    icon_url: '',
-    created_at: '2023-01-05T09:00:00Z',
-    updated_at: '2024-11-28T14:20:00Z',
-  },
-  {
-    id: 4,
-    name: 'HubSpot',
-    description: 'CRM and marketing platform',
-    vendor: 'HubSpot',
-    category: 'Marketing',
-    monthly_cost: 1500,
-    previous_month_cost: 1500,
-    owner_department: 'Marketing',
-    status: 'expiring',
-    website_url: 'https://hubspot.com',
-    active_users_count: 18,
-    icon_url: '',
-    created_at: '2023-03-20T11:00:00Z',
-    updated_at: '2024-11-27T16:45:00Z',
-  },
-  {
-    id: 5,
-    name: 'Notion',
-    description: 'Documentation and collaboration',
-    vendor: 'Notion Labs',
-    category: 'Productivity',
-    monthly_cost: 320,
-    previous_month_cost: 280,
-    owner_department: 'Operations',
-    status: 'active',
-    website_url: 'https://notion.so',
-    active_users_count: 28,
-    icon_url: '',
-    created_at: '2023-04-10T08:30:00Z',
-    updated_at: '2024-11-26T10:15:00Z',
-  },
-  {
-    id: 6,
-    name: 'Datadog',
-    description: 'Monitoring and analytics',
-    vendor: 'Datadog Inc',
-    category: 'Development',
-    monthly_cost: 2100,
-    previous_month_cost: 2100,
-    owner_department: 'Engineering',
-    status: 'active',
-    website_url: 'https://datadog.com',
-    active_users_count: 15,
-    icon_url: '',
-    created_at: '2023-02-01T07:00:00Z',
-    updated_at: '2024-11-25T13:30:00Z',
-  },
-  {
-    id: 7,
-    name: 'Zoom',
-    description: 'Video conferencing',
-    vendor: 'Zoom Video Communications',
-    category: 'Communication',
-    monthly_cost: 180,
-    previous_month_cost: 180,
-    owner_department: 'Operations',
-    status: 'unused',
-    website_url: 'https://zoom.us',
-    active_users_count: 5,
-    icon_url: '',
-    created_at: '2023-01-15T09:00:00Z',
-    updated_at: '2024-11-24T11:00:00Z',
-  },
-  {
-    id: 8,
-    name: 'GitHub',
-    description: 'Code repository and CI/CD',
-    vendor: 'GitHub Inc',
-    category: 'Development',
-    monthly_cost: 890,
-    previous_month_cost: 850,
-    owner_department: 'Engineering',
-    status: 'active',
-    website_url: 'https://github.com',
-    active_users_count: 38,
-    icon_url: '',
-    created_at: '2023-01-01T00:00:00Z',
-    updated_at: '2024-11-23T09:45:00Z',
-  },
-];
 
 /**
  * RecentToolsTable - Dashboard table showing recently updated tools.
@@ -169,22 +28,26 @@ const mockTools: Tool[] = [
  * - Relative dates: "2 days ago" more meaningful than "2024-11-30"
  * 
  * @utility-usage
- * - formatCurrency(): Consistent currency display (\u20ac1,250)
+ * - formatCurrency(): Consistent currency display (€1,250)
  * - formatDate(): Relative time formatting ("2 days ago")
  * - calculatePercentageChange(): Cost trend calculation
  */
 export function RecentToolsTable() {
+  // Fetch 8 most recently updated tools
+  const { data: toolsResponse, isLoading, error } = useTools({
+    _limit: 8,
+    _sort: 'updated_at',
+    _order: 'desc',
+  });
+
+  const { openToolDetails, openEditToolModal } = useModalStore();
+
   const handleViewDetails = (tool: Tool) => {
-    console.log('View details for:', tool.name);
-    // In production: navigate to tool details page
-    // window.location.href = `/tools/${tool.id}`;
+    openToolDetails(tool.id);
   };
 
   const handleEdit = (tool: Tool) => {
-    console.log('Edit tool:', tool.name);
-    // In production: open edit modal or navigate to edit page
-    // setSelectedTool(tool);
-    // setIsEditModalOpen(true);
+    openEditToolModal(tool.id);
   };
 
   const handleMore = (tool: Tool) => {
@@ -195,6 +58,24 @@ export function RecentToolsTable() {
     // - Delete
     // - View History
   };
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="text-center py-12">
+        <p className="text-status-unused">Error loading tools. Please try again.</p>
+      </div>
+    );
+  }
+
+  const tools = toolsResponse?.data || [];
 
   return (
     <Table>
@@ -225,7 +106,7 @@ export function RecentToolsTable() {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {mockTools.map((tool) => (
+        {tools.map((tool) => (
           <TableRow key={tool.id}>
             <TableCell>
               <div className="flex items-center gap-3">

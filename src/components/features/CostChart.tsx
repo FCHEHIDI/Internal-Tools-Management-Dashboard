@@ -1,26 +1,6 @@
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
-
-/**
- * Mock data representing 6 months of cost evolution.
- * 
- * @production In a real application, this would come from:
- * - TanStack Query hook: useQuery(['cost-analytics', { period: '6months' }])
- * - API endpoint: GET /api/analytics/cost-evolution?period=6m
- * - Props passed from parent with date range filters
- * 
- * @data-structure
- * - month: Display label for X-axis
- * - cost: Actual spending per month
- * - budget: Allocated budget for comparison
- */
-const data = [
-  { month: 'Jan', cost: 24500, budget: 26000 },
-  { month: 'Feb', cost: 25200, budget: 26000 },
-  { month: 'Mar', cost: 26800, budget: 27000 },
-  { month: 'Apr', cost: 27500, budget: 28000 },
-  { month: 'May', cost: 28200, budget: 29000 },
-  { month: 'Jun', cost: 28750, budget: 30000 },
-];
+import { Loader2 } from 'lucide-react';
+import { useCostEvolution } from '@/hooks';
 
 /**
  * CostChart - Line chart visualizing monthly spend evolution vs budget.
@@ -44,6 +24,26 @@ const data = [
  * - Semantic color usage via CSS variables (theme-aware)
  */
 export function CostChart() {
+  const { data: costData, isLoading, error } = useCostEvolution('6m');
+
+  if (isLoading) {
+    return (
+      <div className="h-[300px] flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  if (error || !costData) {
+    return (
+      <div className="h-[300px] flex items-center justify-center">
+        <p className="text-status-unused">Error loading cost data</p>
+      </div>
+    );
+  }
+
+  const data = costData;
+
   return (
     <div className="h-[300px]">
       {/* ResponsiveContainer: Ensures chart adapts to parent container size */}

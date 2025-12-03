@@ -1,31 +1,7 @@
 import { useState } from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
-
-/**
- * Department cost breakdown data.
- * 
- * @production This would be fetched from:
- * - API: GET /api/analytics/department-costs
- * - Aggregated from tools table: GROUP BY department, SUM(monthlyCost)
- * - Could include filters: date range, status (active only), etc.
- * 
- * @color-strategy
- * Each department has a semantic color - lighter shades for dark mode readability
- * - Engineering (blue): Main focus department
- * - Sales (green): Revenue-generating
- * - Marketing (orange): High-visibility spend
- * - Design (purple): Creative/support
- * - Support (pink): Operational/critical
- * 
- * @note Colors should be configurable per organization's needs
- */
-const data = [
-  { name: 'Engineering', value: 12500 },
-  { name: 'Sales', value: 8200 },
-  { name: 'Marketing', value: 4800 },
-  { name: 'Design', value: 2100 },
-  { name: 'Support', value: 1150 },
-];
+import { Loader2 } from 'lucide-react';
+import { useDepartmentCosts } from '@/hooks';
 
 const PRIMARY_COLOR = '#60a5fa'; // Light blue
 const HOVER_COLOR = '#c0c0c0'; // Silver
@@ -50,6 +26,7 @@ const HOVER_COLOR = '#c0c0c0'; // Silver
  */
 export function DepartmentChart() {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const { data: departmentData, isLoading, error } = useDepartmentCosts();
 
   const onPieEnter = (_: unknown, index: number) => {
     setActiveIndex(index);
@@ -58,6 +35,24 @@ export function DepartmentChart() {
   const onPieLeave = () => {
     setActiveIndex(null);
   };
+
+  if (isLoading) {
+    return (
+      <div className="h-[300px] flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  if (error || !departmentData) {
+    return (
+      <div className="h-[300px] flex items-center justify-center">
+        <p className="text-status-unused">Error loading department data</p>
+      </div>
+    );
+  }
+
+  const data = departmentData;
 
   const onClick = (_: unknown, index: number) => {
     console.log('Selected department:', data[index].name);
