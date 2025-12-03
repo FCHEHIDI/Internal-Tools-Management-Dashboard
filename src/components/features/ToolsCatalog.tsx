@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { ExternalLink, Edit, Trash2, Users, DollarSign, Loader2 } from 'lucide-react';
-import { Card, Badge } from '@/components/ui';
+import { ExternalLink, Edit, Trash2, Users, DollarSign } from 'lucide-react';
+import { Card, Badge, LoadingSpinner, ErrorMessage } from '@/components/ui';
 import { formatCurrency } from '@/lib/utils';
 import { useTools } from '@/hooks';
 import { useModalStore } from '@/stores';
@@ -66,19 +66,11 @@ export function ToolsCatalog({ searchQuery = '', filters }: ToolsCatalogProps) {
   };
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center py-12">
-        <Loader2 className="w-8 h-8 animate-spin text-primary" />
-      </div>
-    );
+    return <LoadingSpinner />;
   }
 
   if (error) {
-    return (
-      <div className="text-center py-12">
-        <p className="text-status-unused">Error loading tools. Please try again.</p>
-      </div>
-    );
+    return <ErrorMessage message="Failed to load tools. Please try again." />;
   }
 
   const tools = toolsResponse?.data || [];

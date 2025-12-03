@@ -23,53 +23,78 @@ export interface ToolsResponse {
  * Fetch tools with optional filters, pagination, and search
  */
 export const getTools = async (params?: ToolsQueryParams): Promise<ToolsResponse> => {
-  const response = await apiClient.get<Tool[]>('/tools', { params });
-  
-  // JSON Server returns total count in headers
-  const total = parseInt(response.headers['x-total-count'] || '0', 10);
-  
-  return {
-    data: response.data,
-    total,
-    page: params?._page || 1,
-    limit: params?._limit || 10,
-  };
+  try {
+    const response = await apiClient.get<Tool[]>('/tools', { params });
+    
+    // JSON Server returns total count in headers
+    const total = parseInt(response.headers['x-total-count'] || '0', 10);
+    
+    return {
+      data: response.data,
+      total,
+      page: params?._page || 1,
+      limit: params?._limit || 10,
+    };
+  } catch (error) {
+    console.error('Failed to fetch tools:', error);
+    throw error;
+  }
 };
 
 /**
  * Fetch a single tool by ID
  */
 export const getToolById = async (id: number): Promise<Tool> => {
-  const response = await apiClient.get<Tool>(`/tools/${id}`);
-  return response.data;
+  try {
+    const response = await apiClient.get<Tool>(`/tools/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error(`Failed to fetch tool ${id}:`, error);
+    throw error;
+  }
 };
 
 /**
  * Create a new tool
  */
 export const createTool = async (tool: Omit<Tool, 'id' | 'created_at' | 'updated_at'>): Promise<Tool> => {
-  const response = await apiClient.post<Tool>('/tools', {
-    ...tool,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  });
-  return response.data;
+  try {
+    const response = await apiClient.post<Tool>('/tools', {
+      ...tool,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Failed to create tool:', error);
+    throw error;
+  }
 };
 
 /**
  * Update an existing tool
  */
 export const updateTool = async (id: number, tool: Partial<Tool>): Promise<Tool> => {
-  const response = await apiClient.patch<Tool>(`/tools/${id}`, {
-    ...tool,
-    updated_at: new Date().toISOString(),
-  });
-  return response.data;
+  try {
+    const response = await apiClient.patch<Tool>(`/tools/${id}`, {
+      ...tool,
+      updated_at: new Date().toISOString(),
+    });
+    return response.data;
+  } catch (error) {
+    console.error(`Failed to update tool ${id}:`, error);
+    throw error;
+  }
 };
 
 /**
  * Delete a tool
  */
 export const deleteTool = async (id: number): Promise<void> => {
-  await apiClient.delete(`/tools/${id}`);
+  try {
+    await apiClient.delete(`/tools/${id}`);
+  } catch (error) {
+    console.error(`Failed to delete tool ${id}:`, error);
+    throw error;
+  }
 };

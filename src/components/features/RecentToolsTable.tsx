@@ -1,5 +1,5 @@
-import { ArrowUpDown, MoreVertical, ExternalLink, Edit, Loader2 } from 'lucide-react';
-import { Badge, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui';
+import { ArrowUpDown, MoreVertical, ExternalLink, Edit } from 'lucide-react';
+import { Badge, Table, TableBody, TableCell, TableHead, TableHeader, TableRow, LoadingSpinner, ErrorMessage } from '@/components/ui';
 import { formatCurrency, formatDate } from '@/lib/utils';
 import { useTools } from '@/hooks';
 import { useModalStore } from '@/stores';
@@ -60,19 +60,11 @@ export function RecentToolsTable() {
   };
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center py-12">
-        <Loader2 className="w-8 h-8 animate-spin text-primary" />
-      </div>
-    );
+    return <LoadingSpinner />;
   }
 
   if (error) {
-    return (
-      <div className="text-center py-12">
-        <p className="text-status-unused">Error loading tools. Please try again.</p>
-      </div>
-    );
+    return <ErrorMessage message="Failed to load recent tools." />;
   }
 
   const tools = toolsResponse?.data || [];

@@ -32,7 +32,6 @@ export function ToolsFilters() {
     toggleCategory,
     toggleDepartment,
     toggleStatus,
-    clearAllFilters
   } = useFiltersStore();
 
   /**

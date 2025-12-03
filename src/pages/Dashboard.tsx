@@ -55,7 +55,7 @@ export function Dashboard() {
       title: 'Departments',
       value: '8',
       trend: '+2',
-      gradient: 'info' as const,
+      gradient: 'primary' as const,
       icon: <Building2 className="w-12 h-12" />,
     },
     {

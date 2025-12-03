@@ -1,6 +1,9 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { getTools, getToolById, createTool, updateTool, deleteTool } from '@/services/api';
-import type { Tool, ToolsQueryParams } from '@/services/api/tools';
+import { getTools, getToolById, createTool, updateTool, deleteTool, type ToolsQueryParams, type ToolsResponse } from '@/services/api';
+import type { Tool } from '@/types';
+
+// Re-export types for convenience
+export type { ToolsQueryParams, ToolsResponse };
 
 /**
  * Hook to fetch tools with optional filters and pagination
@@ -36,6 +39,9 @@ export const useCreateTool = () => {
       // Invalidate and refetch tools list
       queryClient.invalidateQueries({ queryKey: ['tools'] });
     },
+    onError: (error) => {
+      console.error('Failed to create tool:', error);
+    },
   });
 };
 
@@ -52,6 +58,9 @@ export const useUpdateTool = () => {
       queryClient.invalidateQueries({ queryKey: ['tools', variables.id] });
       queryClient.invalidateQueries({ queryKey: ['tools'] });
     },
+    onError: (error, variables) => {
+      console.error(`Failed to update tool ${variables.id}:`, error);
+    },
   });
 };
 
@@ -66,6 +75,9 @@ export const useDeleteTool = () => {
     onSuccess: () => {
       // Invalidate tools list
       queryClient.invalidateQueries({ queryKey: ['tools'] });
+    },
+    onError: (error, id) => {
+      console.error(`Failed to delete tool ${id}:`, error);
     },
   });
 };

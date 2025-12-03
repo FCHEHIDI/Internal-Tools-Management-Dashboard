@@ -59,8 +59,6 @@ export function Tools() {
 
       {/* Filters Sidebar and Catalog */}
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-      {/* Filters Sidebar and Catalog */}
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         {showFilters && (
           <div className="lg:col-span-1">
             <ToolsFilters />
@@ -77,4 +75,6 @@ export function Tools() {
           />
         </div>
       </div>
+    </div>
+  );
 }

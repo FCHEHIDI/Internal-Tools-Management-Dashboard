@@ -1,5 +1,5 @@
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
-import { Loader2 } from 'lucide-react';
+import { LoadingSpinner, ErrorMessage } from '@/components/ui';
 import { useCostEvolution } from '@/hooks';
 
 /**
@@ -27,19 +27,11 @@ export function CostChart() {
   const { data: costData, isLoading, error } = useCostEvolution('6m');
 
   if (isLoading) {
-    return (
-      <div className="h-[300px] flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-primary" />
-      </div>
-    );
+    return <LoadingSpinner className="h-[300px]" />;
   }
 
   if (error || !costData) {
-    return (
-      <div className="h-[300px] flex items-center justify-center">
-        <p className="text-status-unused">Error loading cost data</p>
-      </div>
-    );
+    return <ErrorMessage message="Failed to load cost data" className="h-[300px]" />;
   }
 
   const data = costData;

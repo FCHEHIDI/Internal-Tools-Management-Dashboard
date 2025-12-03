@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
-import { Loader2 } from 'lucide-react';
+import { LoadingSpinner, ErrorMessage } from '@/components/ui';
 import { useTopTools } from '@/hooks';
 
 const PRIMARY_COLOR = '#60a5fa'; // Light blue
@@ -33,25 +33,12 @@ export function UsageChart() {
     setActiveIndex(null);
   };
 
-  const onClick = (data: unknown) => {
-    const bar = data as { name: string; users: number; cost: number };
-    console.log('Selected tool:', bar.name, 'Users:', bar.users);
-  };
-
   if (isLoading) {
-    return (
-      <div className="h-[300px] flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-primary" />
-      </div>
-    );
+    return <LoadingSpinner className="h-[300px]" />;
   }
 
   if (error || !topToolsData) {
-    return (
-      <div className="h-[300px] flex items-center justify-center">
-        <p className="text-status-unused">Error loading usage data</p>
-      </div>
-    );
+    return <ErrorMessage message="Failed to load usage data" className="h-[300px]" />;
   }
 
   const data = topToolsData;
@@ -134,7 +121,7 @@ export function UsageChart() {
             onClick={handleClick}
             style={{ cursor: 'pointer' }}
           >
-            {data.map((_, index) => (
+            {data.map((_entry: { name: string; users: number; cost: number }, index: number) => (
               <Cell 
                 key={`cell-${index}`} 
                 fill={activeIndex === index ? HOVER_COLOR : PRIMARY_COLOR}

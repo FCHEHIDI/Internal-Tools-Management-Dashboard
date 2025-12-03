@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
-import { Loader2 } from 'lucide-react';
+import { LoadingSpinner, ErrorMessage } from '@/components/ui';
 import { useDepartmentCosts } from '@/hooks';
 
 const PRIMARY_COLOR = '#60a5fa'; // Light blue
@@ -37,19 +37,11 @@ export function DepartmentChart() {
   };
 
   if (isLoading) {
-    return (
-      <div className="h-[300px] flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-primary" />
-      </div>
-    );
+    return <LoadingSpinner className="h-[300px]" />;
   }
 
   if (error || !departmentData) {
-    return (
-      <div className="h-[300px] flex items-center justify-center">
-        <p className="text-status-unused">Error loading department data</p>
-      </div>
-    );
+    return <ErrorMessage message="Failed to load department data" className="h-[300px]" />;
   }
 
   const data = departmentData;
@@ -91,7 +83,7 @@ export function DepartmentChart() {
               @key: Stable keys prevent unnecessary re-renders
               @opacity: Dim non-active segments on hover
             */}
-            {data.map((_, index) => (
+            {data.map((_entry: { name: string; value: number }, index: number) => (
               <Cell 
                 key={`cell-${index}`} 
                 fill={activeIndex === index ? HOVER_COLOR : PRIMARY_COLOR}

@@ -6,3 +6,5 @@ export { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '.
 export { Modal } from './Modal';
 export { Select } from './Select';
 export { Textarea } from './Textarea';
+export { ErrorMessage } from './ErrorMessage';
+export { LoadingSpinner } from './LoadingSpinner';
