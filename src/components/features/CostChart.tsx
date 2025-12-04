@@ -24,7 +24,7 @@ import { useCostEvolution } from '@/hooks';
  * - Semantic color usage via CSS variables (theme-aware)
  */
 export function CostChart() {
-  const { data: costData, isLoading, error } = useCostEvolution('6m');
+  const { data: costData, isLoading, error } = useCostEvolution();
 
   if (isLoading) {
     return <LoadingSpinner className="h-[300px]" />;
