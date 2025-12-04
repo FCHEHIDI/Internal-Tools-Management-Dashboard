@@ -1,7 +1,10 @@
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Sparkles, TrendingUp, Lightbulb, Plus } from 'lucide-react';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
+import { StreamingText } from '@/components/ui/StreamingText';
+import { RobotScene } from '@/components/three/RobotScene';
 import { formatCurrency } from '@/lib/utils';
 
 /**
@@ -100,6 +103,10 @@ export function WelcomeWidget({
 }: WelcomeWidgetProps) {
   // @production: Select random fact or rotate based on visit count
   const randomFact = didYouKnowFacts[Math.floor(Math.random() * didYouKnowFacts.length)];
+  const [showLastAction, setShowLastAction] = useState(false);
+  const [showDidYouKnow, setShowDidYouKnow] = useState(false);
+  const [showSavings, setShowSavings] = useState(false);
+  const [showButton, setShowButton] = useState(false);
   
   return (
     <motion.div
@@ -109,50 +116,64 @@ export function WelcomeWidget({
       transition={{ duration: 0.3 }}
     >
       <Card 
-        variant="gradient" 
-        gradient="primary" 
-        className="p-8 relative overflow-hidden"
-      >
-        {/* Decorative background elements */}
-        <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/5 rounded-full blur-3xl" />
-        
-        <div className="relative z-10 space-y-6">
-          {/* Greeting Section */}
-          <div className="space-y-2">
-            <div className="flex items-center gap-2">
-              <Sparkles className="w-6 h-6 text-white/90" />
-              <h2 className="text-2xl font-bold text-white">
-                {getTimeBasedGreeting()}, {userName}!
-              </h2>
-            </div>
+        className="p-0 relative overflow-visible bg-transparent border-0 shadow-none"
+      >        
+        <div className="relative z-10 grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-6 items-center">
+
+          {/* Content Section */}
+          <div className="space-y-4 relative z-10">
+            {/* Greeting Section */}
+            <div className="space-y-2">
+              <div className="flex items-center gap-2">
+                <Sparkles className="w-5 h-5 text-blue-500 dark:text-blue-400" />
+                <h2 className="text-xl lg:text-2xl font-bold text-foreground">
+                  <StreamingText 
+                    text={`${getTimeBasedGreeting()}, ${userName}!`}
+                    speed={40}
+                  />
+                </h2>
+              </div>
             
             {/* Last Action Summary */}
             {lastAction && (
-              <motion.p 
-                className="text-white/80 flex items-center gap-2"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.2 }}
+              <motion.div
+                className="text-foreground-secondary flex items-start gap-2 text-sm bg-blue-50 dark:bg-blue-950/30 rounded-lg px-3 py-2 border border-blue-200/50 dark:border-blue-800/50"
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: showLastAction ? 1 : 0, height: showLastAction ? 'auto' : 0 }}
+                transition={{ duration: 0.3 }}
               >
-                <TrendingUp className="w-4 h-4" />
-                Your last action: <strong>{lastAction.action} "{lastAction.toolName}"</strong> {lastAction.timeAgo}
-              </motion.p>
+                <TrendingUp className="w-4 h-4 mt-0.5 flex-shrink-0 text-blue-600 dark:text-blue-400" />
+                <p>
+                  <StreamingText 
+                    text={`Your last action: ${lastAction.action} "${lastAction.toolName}" ${lastAction.timeAgo}`}
+                    delay={1200}
+                    speed={20}
+                    onComplete={() => setShowLastAction(true)}
+                  />
+                </p>
+              </motion.div>
             )}
           </div>
 
           {/* Did You Know Section */}
           <motion.div 
-            className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20"
+            className="bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-950/20 dark:to-cyan-950/20 rounded-lg p-4 border border-blue-200/50 dark:border-blue-800/30"
             initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.3 }}
+            animate={{ opacity: showDidYouKnow ? 1 : 0, scale: showDidYouKnow ? 1 : 0.95 }}
+            transition={{ duration: 0.3 }}
           >
             <div className="flex gap-3">
-              <Lightbulb className="w-5 h-5 text-yellow-300 flex-shrink-0 mt-1" />
+              <Lightbulb className="w-5 h-5 text-yellow-500 dark:text-yellow-400 flex-shrink-0 mt-1" />
               <div>
-                <p className="text-sm font-semibold text-white/90 mb-1">💡 Did you know?</p>
-                <p className="text-sm text-white/80">{randomFact}</p>
+                <p className="text-sm font-semibold text-foreground mb-1">💡 Did you know?</p>
+                <p className="text-sm text-foreground-secondary">
+                  <StreamingText 
+                    text={randomFact}
+                    delay={2400}
+                    speed={25}
+                    onComplete={() => setShowDidYouKnow(true)}
+                  />
+                </p>
               </div>
             </div>
           </motion.div>
@@ -160,14 +181,19 @@ export function WelcomeWidget({
           {/* Savings Highlight (if available) */}
           {quarterlySavings > 0 && (
             <motion.div
-              className="flex items-center gap-2 text-white/90"
+              className="flex items-center gap-2 text-foreground-secondary text-sm"
               initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.4 }}
+              animate={{ opacity: showSavings ? 1 : 0, x: showSavings ? 0 : -20 }}
+              transition={{ duration: 0.3 }}
             >
-              <div className="w-2 h-2 rounded-full bg-green-400" />
-              <p className="text-sm">
-                You've saved <strong className="text-green-300">{formatCurrency(quarterlySavings)}</strong> this quarter by optimizing tools
+              <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+              <p>
+                <StreamingText 
+                  text={`You've saved ${formatCurrency(quarterlySavings)} this quarter by optimizing tools`}
+                  delay={3600}
+                  speed={20}
+                  onComplete={() => setShowSavings(true)}
+                />
               </p>
             </motion.div>
           )}
@@ -175,19 +201,23 @@ export function WelcomeWidget({
           {/* Call to Action */}
           <motion.div
             initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.5 }}
+            animate={{ opacity: showButton ? 1 : 0 }}
+            transition={{ duration: 0.3 }}
+            onAnimationComplete={() => {
+              setTimeout(() => setShowButton(true), 4200);
+            }}
           >
             <Button
               size="lg"
-              className="bg-primary-600 text-white hover:bg-primary-700 active:bg-primary-800 font-semibold shadow-lg w-full sm:w-auto transition-colors"
+              className="bg-gradient-to-r from-blue-600 to-slate-400 text-white hover:from-blue-700 hover:to-slate-500 font-semibold shadow-lg w-full sm:w-auto transition-all"
               onClick={onAddToolClick}
               data-testid="add-tool-cta"
             >
               <Plus className="w-5 h-5 mr-2" />
               Add New Tool to Your Stack
             </Button>
-          </motion.div>
+            </motion.div>
+          </div>
         </div>
       </Card>
     </motion.div>

@@ -3,16 +3,47 @@ import { Card } from '@/components/ui/Card';
 import { Input, Label } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
 import { Button } from '@/components/ui/Button';
+import { useUser } from '@/contexts/UserContext';
 
 export function Settings() {
+  const { avatarUrl, setAvatarUrl } = useUser();
+  
+  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      // Validate file size (max 2MB)
+      if (file.size > 2 * 1024 * 1024) {
+        alert('File size must be less than 2MB');
+        return;
+      }
+      
+      // Validate file type
+      if (!file.type.match(/^image\/(jpeg|png|gif)$/)) {
+        alert('Please upload a JPG, PNG, or GIF image');
+        return;
+      }
+      
+      // Create preview URL
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setAvatarUrl(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   return (
     <div className="space-y-8">
       {/* Header */}
       <div>
-        <h1 className="text-h1 font-bold text-foreground">Settings</h1>
-        <p className="text-foreground-secondary mt-2">
-          Manage your account preferences and application settings
-        </p>
+        <h1 className="text-h1 font-bold bg-gradient-to-r from-cyan-300 via-blue-600 to-cyan-300 bg-clip-text text-transparent animate-gradient-title">
+          Settings
+        </h1>
+        <div className="overflow-hidden mt-2">
+          <p className="text-foreground-secondary animate-scroll-left whitespace-nowrap">
+            Manage your account preferences and application settings
+          </p>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -56,11 +87,28 @@ export function Settings() {
             <div className="space-y-6">
               {/* Avatar */}
               <div className="flex items-center gap-6">
-                <div className="w-20 h-20 rounded-full bg-gradient-primary text-white flex items-center justify-center font-bold text-2xl">
-                  FC
+                <div className="w-20 h-20 rounded-full bg-gradient-primary text-white flex items-center justify-center font-bold text-2xl overflow-hidden">
+                  {avatarUrl ? (
+                    <img src={avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
+                  ) : (
+                    'FC'
+                  )}
                 </div>
                 <div>
-                  <Button variant="secondary" size="sm">Change Avatar</Button>
+                  <input
+                    type="file"
+                    id="avatar-upload"
+                    accept="image/jpeg,image/png,image/gif"
+                    onChange={handleAvatarChange}
+                    className="hidden"
+                  />
+                  <Button 
+                    variant="secondary" 
+                    size="sm"
+                    onClick={() => document.getElementById('avatar-upload')?.click()}
+                  >
+                    Change Avatar
+                  </Button>
                   <p className="text-xs text-foreground-secondary mt-2">
                     JPG, PNG or GIF. Max size 2MB
                   </p>
@@ -189,7 +237,7 @@ export function Settings() {
           {/* Save Button */}
           <div className="flex justify-end gap-3">
             <Button variant="secondary">Cancel</Button>
-            <Button>Save Changes</Button>
+            <Button className="bg-gradient-to-r from-blue-600 to-slate-400 text-white hover:from-blue-700 hover:to-slate-500 transition-all">Save Changes</Button>
           </div>
         </div>
       </div>

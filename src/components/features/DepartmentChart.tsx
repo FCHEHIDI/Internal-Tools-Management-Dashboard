@@ -4,7 +4,7 @@ import { LoadingSpinner, ErrorMessage } from '@/components/ui';
 import { useDepartmentCosts } from '@/hooks';
 
 const PRIMARY_COLOR = '#60a5fa'; // Light blue
-const HOVER_COLOR = '#c0c0c0'; // Silver
+const HOVER_COLOR = '#d4af37'; // Metallic Gold
 
 /**
  * DepartmentChart - Donut chart showing cost distribution across departments.
@@ -93,18 +93,21 @@ export function DepartmentChart() {
           </Pie>
           <Tooltip
             contentStyle={{
-              backgroundColor: '#374151',
-              border: '1px solid #6b7280',
+              backgroundColor: 'rgba(15, 23, 42, 0.95)',
+              border: '1px solid rgba(212, 175, 55, 0.3)',
               borderRadius: '8px',
-              fontSize: '10px',
+              fontSize: '12px',
+              backdropFilter: 'blur(10px)',
+              boxShadow: '0 0 20px rgba(212, 175, 55, 0.2)',
             }}
             itemStyle={{
-              color: '#fef3c7',
-              fontSize: '10px',
+              color: '#d4af37',
+              fontSize: '12px',
             }}
             labelStyle={{
-              color: '#fef3c7',
-              fontSize: '10px',
+              color: '#d4af37',
+              fontSize: '12px',
+              fontWeight: 'bold',
             }}
             formatter={(value: number) => [`€${value.toLocaleString()}`]}
             labelFormatter={(name: string) => name}

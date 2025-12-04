@@ -4,7 +4,7 @@ import { LoadingSpinner, ErrorMessage } from '@/components/ui';
 import { useTopTools } from '@/hooks';
 
 const PRIMARY_COLOR = '#60a5fa'; // Light blue
-const HOVER_COLOR = '#c0c0c0'; // Silver
+const HOVER_COLOR = '#d4af37'; // Metallic Gold
 
 /**
  * UsageChart - Horizontal bar chart displaying top tools by usage.
@@ -58,7 +58,7 @@ export function UsageChart() {
             Grid: Only vertical lines (horizontal={false})
             Reason: Horizontal lines would clutter between closely-spaced bars
           */}
-          <CartesianGrid strokeDasharray="3 3" className="stroke-border" horizontal={false} />
+          <CartesianGrid strokeDasharray="3 3" className="stroke-border" horizontal={false} fill="transparent" />
           
           {/* 
             X-Axis: Numeric values (user count)
@@ -92,19 +92,23 @@ export function UsageChart() {
             - cost: "€5,890"
           */}
           <Tooltip
+            cursor={{ fill: 'rgba(212, 175, 55, 0.1)', stroke: 'rgba(212, 175, 55, 0.3)', strokeWidth: 1 }}
             contentStyle={{
-              backgroundColor: '#374151',
-              border: '1px solid #6b7280',
+              backgroundColor: 'rgba(15, 23, 42, 0.95)',
+              border: '1px solid rgba(212, 175, 55, 0.3)',
               borderRadius: '8px',
-              fontSize: '10px',
+              fontSize: '12px',
+              backdropFilter: 'blur(10px)',
+              boxShadow: '0 0 20px rgba(212, 175, 55, 0.2)',
             }}
             itemStyle={{
-              color: '#fef3c7',
-              fontSize: '10px',
+              color: '#d4af37',
+              fontSize: '12px',
             }}
             labelStyle={{
-              color: '#fef3c7',
-              fontSize: '10px',
+              color: '#d4af37',
+              fontSize: '12px',
+              fontWeight: 'bold',
             }}
             formatter={(value: number, name: string) => {
               if (name === 'users') return [`${value} users`];
@@ -124,15 +128,14 @@ export function UsageChart() {
           <Bar 
             dataKey="users" 
             radius={[0, 8, 8, 0]}
-            onMouseEnter={onBarEnter}
-            onMouseLeave={onBarLeave}
             onClick={handleClick}
             style={{ cursor: 'pointer' }}
+            fill={PRIMARY_COLOR}
           >
             {data.map((_entry: { name: string; users: number; cost: number }, index: number) => (
               <Cell 
                 key={`cell-${index}`} 
-                fill={activeIndex === index ? HOVER_COLOR : PRIMARY_COLOR}
+                fill={PRIMARY_COLOR}
               />
             ))}
           </Bar>

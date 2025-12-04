@@ -9,10 +9,19 @@ import { AddToolModal } from './components/features/AddToolModal';
 import { EditToolModal } from './components/features/EditToolModal';
 import { ToolDetailsModal } from './components/features/ToolDetailsModal';
 import { DeleteConfirmModal } from './components/features/DeleteConfirmModal';
+import { UFOScene } from './components/three/UFOScene';
+import { UserProvider } from './contexts/UserContext';
+
+// Use basename only in production (GitHub Pages)
+const basename = import.meta.env.PROD ? '/Internal-Tools-Management-Dashboard' : '/';
 
 function App() {
   return (
-    <BrowserRouter basename="/Internal-Tools-Management-Dashboard">
+    <UserProvider>
+      <BrowserRouter basename={basename}>
+      {/* Global UFO - flies across all pages */}
+      <UFOScene />
+      
       <Routes>
         <Route path="/" element={<MainLayout />}>
           <Route index element={<Dashboard />} />
@@ -29,6 +38,7 @@ function App() {
       <ToolDetailsModal />
       <DeleteConfirmModal />
     </BrowserRouter>
+    </UserProvider>
   );
 }
 

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { TrendingUp, TrendingDown, DollarSign, Wrench, Building2, Users, Search } from 'lucide-react';
 import { Card, Input } from '@/components/ui';
-import { formatCurrency } from '@/lib/utils';
+import { formatCurrency, cn } from '@/lib/utils';
 import { RecentToolsTable } from '@/components/features/RecentToolsTable';
 import { AddToolWidget } from '@/components/features/AddToolWidget';
 
@@ -16,13 +16,23 @@ interface KPICardProps {
 function KPICard({ title, value, trend, gradient, icon }: KPICardProps) {
   const isPositive = trend.startsWith('+');
   
+  // Map gradient to color classes for hover effect
+  const colorMap = {
+    gold: 'group-hover:text-[#d4af37]',
+    platinum: 'group-hover:text-[#e5e4e2]',
+    sapphire: 'group-hover:text-[#0f52ba]',
+    ruby: 'group-hover:text-[#e0115f]',
+  } as const;
+  
+  const hoverColor = colorMap[gradient as keyof typeof colorMap];
+  
   return (
-    <Card variant="gradient" gradient={gradient} className="p-6 relative overflow-hidden">
-      <div className="absolute top-4 right-4 opacity-20">{icon}</div>
+    <Card variant="bordered" borderColor="platinum" className="p-6 relative overflow-hidden hover-shake cursor-pointer group">
+      <div className={cn("absolute top-4 right-4 opacity-20 transition-colors duration-300", hoverColor)}>{icon}</div>
       <div className="relative z-10">
-        <p className="text-sm font-medium opacity-90">{title}</p>
-        <p className="text-3xl font-bold mt-2">{value}</p>
-        <div className="flex items-center gap-1 mt-2 text-sm opacity-90">
+        <p className={cn("text-sm font-medium opacity-90 transition-colors duration-300", hoverColor)}>{title}</p>
+        <p className={cn("text-3xl font-bold mt-2 transition-colors duration-300", hoverColor)}>{value}</p>
+        <div className={cn("flex items-center gap-1 mt-2 text-sm opacity-90 transition-colors duration-300", hoverColor)}>
           {isPositive ? (
             <TrendingUp className="w-4 h-4" />
           ) : (
@@ -48,28 +58,28 @@ export function Dashboard() {
       title: 'Total Budget',
       value: formatCurrency(28750),
       trend: '+12%',
-      gradient: 'primary' as const,
+      gradient: 'gold' as const,
       icon: <DollarSign className="w-12 h-12" />,
     },
     {
       title: 'Active Tools',
       value: '147',
       trend: '+8',
-      gradient: 'success' as const,
+      gradient: 'platinum' as const,
       icon: <Wrench className="w-12 h-12" />,
     },
     {
       title: 'Departments',
       value: '8',
       trend: '+2',
-      gradient: 'primary' as const,
+      gradient: 'sapphire' as const,
       icon: <Building2 className="w-12 h-12" />,
     },
     {
       title: 'Cost per User',
       value: formatCurrency(156),
       trend: '+€10',
-      gradient: 'warning' as const,
+      gradient: 'ruby' as const,
       icon: <Users className="w-12 h-12" />,
     },
   ];
@@ -78,10 +88,14 @@ export function Dashboard() {
     <div className="space-y-8">
       {/* Header */}
       <div>
-        <h1 className="text-h1 font-bold text-foreground">Dashboard</h1>
-        <p className="text-foreground-secondary mt-2">
-          Overview of your internal tools and budget
-        </p>
+        <h1 className="text-h1 font-bold bg-gradient-to-r from-cyan-300 via-blue-600 to-cyan-300 bg-clip-text text-transparent animate-gradient-title">
+          Dashboard
+        </h1>
+        <div className="overflow-hidden mt-2">
+          <p className="text-foreground-secondary animate-scroll-left whitespace-nowrap">
+            Overview of your internal tools and budget
+          </p>
+        </div>
       </div>
 
       {/* Add Tool Widget - Modern contextual engagement */}
@@ -135,10 +149,12 @@ export function Dashboard() {
       <div>
         <div className="flex items-center justify-between mb-4">
           <div>
-            <h2 className="text-h3 font-semibold text-foreground">Recent Tools</h2>
-            <p className="text-sm text-foreground-secondary mt-1">
-              Latest updates to your tool catalog
-            </p>
+            <h2 className="text-h3 font-semibold bg-gradient-to-r from-cyan-300 via-blue-600 to-cyan-300 bg-clip-text text-transparent animate-gradient-title">Recent Tools</h2>
+            <div className="overflow-hidden mt-1">
+              <p className="text-sm text-foreground-secondary animate-scroll-left whitespace-nowrap">
+                Latest updates to your tool catalog
+              </p>
+            </div>
           </div>
         </div>
         

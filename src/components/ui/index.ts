@@ -8,3 +8,4 @@ export { Select } from './Select';
 export { Textarea } from './Textarea';
 export { ErrorMessage } from './ErrorMessage';
 export { LoadingSpinner } from './LoadingSpinner';
+export { StreamingText } from './StreamingText';

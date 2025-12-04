@@ -14,7 +14,7 @@
     --surface: 0 0% 100%;
     --surface-hover: 210 40% 96%;
     --border: 189 100% 50%;
-    --primary: 262 83% 58%;
+    --primary: 217 91% 60%;
     --secondary: 220 14% 96%;
     
     /* Status colors */
@@ -32,7 +32,7 @@
     --surface: 222 47% 15%;
     --surface-hover: 222 47% 18%;
     --border: 189 100% 50%;
-    --primary: 262 83% 58%;
+    --primary: 217 91% 60%;
     --secondary: 222 47% 15%;
     
     /* Status colors (same in both themes) */
@@ -118,5 +118,79 @@
       opacity: 1;
       transform: translateY(0);
     }
+  }
+
+  /* Animated gradient for page titles */
+  .animate-gradient-title {
+    background-size: 300% auto;
+    animation: gradient-shift 3s ease infinite;
+  }
+
+  @keyframes gradient-shift {
+    0%, 100% {
+      background-position: 0% center;
+    }
+    50% {
+      background-position: 100% center;
+    }
+  }
+
+  /* Scrolling text animation */
+  .animate-scroll-left {
+    display: inline-block;
+    animation: scroll-left 15s linear infinite;
+  }
+
+  @keyframes scroll-left {
+    0% {
+      transform: translateX(100%);
+    }
+    100% {
+      transform: translateX(-100%);
+    }
+  }
+
+  /* Shake animation for KPI cards */
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-2px) rotate(-0.5deg); }
+    20%, 40%, 60%, 80% { transform: translateX(2px) rotate(0.5deg); }
+  }
+
+  .hover-shake:hover {
+    animation: shake 0.5s ease-in-out;
+  }
+
+  /* Pulse glow effect */
+  @keyframes pulse-glow {
+    0%, 100% {
+      opacity: 1;
+      box-shadow: 0 0 5px rgba(0, 212, 255, 0.3);
+    }
+    50% {
+      opacity: 0.9;
+      box-shadow: 0 0 15px rgba(0, 212, 255, 0.6), 0 0 25px rgba(0, 212, 255, 0.4);
+    }
+  }
+
+  .animate-pulse-glow {
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
+
+  /* Disable Recharts default hover background */
+  .recharts-bar-rectangle:hover {
+    filter: none !important;
+  }
+  
+  .recharts-active-bar {
+    filter: none !important;
+  }
+  
+  .recharts-layer.recharts-bar-background {
+    display: none !important;
+  }
+
+  .recharts-rectangle.recharts-tooltip-cursor {
+    fill: transparent !important;
   }
 }

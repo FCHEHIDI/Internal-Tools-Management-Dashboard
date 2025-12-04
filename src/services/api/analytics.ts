@@ -27,13 +27,20 @@ export const getDepartmentCosts = async () => {
     const departmentMap = new Map<string, number>();
     tools.forEach((tool: any) => {
       const dept = tool.owner_department || 'Unknown';
-      departmentMap.set(dept, (departmentMap.get(dept) || 0) + tool.monthly_cost);
+      const cost = Number(tool.monthly_cost) || 0;
+      departmentMap.set(dept, (departmentMap.get(dept) || 0) + cost);
     });
     
-    return Array.from(departmentMap.entries()).map(([name, value]) => ({
-      name,
-      value: Math.round(value)
-    }));
+    // Convert to array and sort by value descending
+    const result = Array.from(departmentMap.entries())
+      .map(([name, value]) => ({
+        name,
+        value: Math.round(value)
+      }))
+      .filter(item => item.value > 0) // Remove zero-value departments
+      .sort((a, b) => b.value - a.value); // Sort by value descending
+    
+    return result;
   } catch (error) {
     console.error('Failed to fetch department costs:', error);
     throw error;

@@ -4,6 +4,7 @@ import { useToolById } from '@/hooks';
 import { LoadingSpinner } from '@/components/ui';
 import { formatCurrency } from '@/lib/utils';
 import { Users, DollarSign, Calendar } from 'lucide-react';
+import { getToolLogo, getToolInitial } from '@/lib/toolLogos';
 
 export function ToolDetailsModal() {
   const { isToolDetailsOpen, viewingToolId, closeToolDetails } = useModalStore();
@@ -20,9 +21,17 @@ export function ToolDetailsModal() {
           <div className="space-y-6">
             {/* Header */}
             <div className="flex items-start gap-4">
-              <div className="w-16 h-16 rounded-lg bg-gradient-primary flex items-center justify-center text-white font-bold text-2xl">
-                {tool.name?.charAt(0) || '?'}
-              </div>
+              {getToolLogo(tool.name) ? (
+                <img 
+                  src={getToolLogo(tool.name)!} 
+                  alt={tool.name || 'Tool'} 
+                  className="w-16 h-16 rounded-lg object-contain bg-white p-3"
+                />
+              ) : (
+                <div className="w-16 h-16 rounded-lg bg-gradient-primary flex items-center justify-center text-white font-bold text-2xl">
+                  {getToolInitial(tool.name)}
+                </div>
+              )}
               <div className="flex-1">
                 <div className="flex items-center gap-2">
                   <h3 className="text-xl font-bold text-foreground">{tool.name || 'Unknown'}</h3>

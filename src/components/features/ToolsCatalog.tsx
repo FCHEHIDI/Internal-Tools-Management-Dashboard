@@ -4,6 +4,7 @@ import { Card, Badge, LoadingSpinner, ErrorMessage } from '@/components/ui';
 import { formatCurrency } from '@/lib/utils';
 import { useTools } from '@/hooks';
 import { useModalStore } from '@/stores';
+import { getToolLogo, getToolInitial } from '@/lib/toolLogos';
 
 interface ToolsCatalogProps {
   searchQuery?: string;
@@ -181,9 +182,17 @@ export function ToolsCatalog({ searchQuery = '', filters }: ToolsCatalogProps) {
           <Card key={tool.id} className="p-6 hover:shadow-xl transition-shadow">
             <div className="flex items-start justify-between">
               <div className="flex items-center gap-3 flex-1">
-                <div className="w-12 h-12 rounded-lg bg-gradient-primary flex items-center justify-center text-white font-bold text-xl">
-                  {tool.name.charAt(0)}
-                </div>
+                {getToolLogo(tool.name) ? (
+                  <img 
+                    src={getToolLogo(tool.name)!} 
+                    alt={tool.name} 
+                    className="w-12 h-12 rounded-lg object-contain bg-white p-2"
+                  />
+                ) : (
+                  <div className="w-12 h-12 rounded-lg bg-gradient-primary flex items-center justify-center text-white font-bold text-xl">
+                    {getToolInitial(tool.name)}
+                  </div>
+                )}
                 <div className="flex-1">
                   <div className="flex items-center gap-2">
                     <h3 className="font-semibold text-foreground">{tool.name}</h3>

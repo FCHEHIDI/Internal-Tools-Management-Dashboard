@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { LayoutDashboard, Wrench, BarChart3, Settings, Menu, X, Bell, User, LogOut, HelpCircle, ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import logo from '@/assets/logo.svg';
+import { useUser } from '@/contexts/UserContext';
 
 const navigation = [
   { name: 'Dashboard', href: '/', icon: LayoutDashboard },
@@ -13,6 +14,7 @@ const navigation = [
 
 export function Header() {
   const location = useLocation();
+  const { avatarUrl } = useUser();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
 
@@ -34,7 +36,9 @@ export function Header() {
           {/* Logo */}
           <Link to="/" className="flex items-center gap-3">
             <img src={logo} alt="TechCorp Logo" className="w-10 h-10" />
-            <span className="font-bold text-foreground text-lg">TechCorp</span>
+            <span className="font-bold text-lg bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-500 bg-clip-text text-transparent drop-shadow-[0_0_15px_rgba(0,212,255,0.5)] animate-pulse">
+              TechCorp
+            </span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -64,13 +68,18 @@ export function Header() {
           {/* User Menu & Mobile Toggle */}
           <div className="flex items-center gap-2 sm:gap-3">
             {/* Notifications */}
-            <button 
-              className="relative p-2 hover:bg-surface-hover rounded-lg transition-colors"
-              aria-label="Notifications"
-            >
-              <Bell className="w-5 h-5 text-foreground-secondary" />
-              <span className="absolute top-1 right-1 w-2 h-2 bg-status-expiring rounded-full border-2 border-surface"></span>
-            </button>
+            <div className="relative group">
+              <button 
+                className="relative p-2 hover:bg-surface-hover rounded-lg transition-colors"
+                aria-label="Notifications"
+              >
+                <Bell className="w-5 h-5 text-foreground-secondary" />
+                <span className="absolute top-1 right-1 w-2 h-2 bg-status-expiring rounded-full border-2 border-surface"></span>
+              </button>
+              <div className="absolute top-full right-0 mt-2 px-3 py-1.5 bg-gray-900 text-white text-xs rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 whitespace-nowrap z-50 pointer-events-none">
+                Coming Soon
+              </div>
+            </div>
 
             {/* User Avatar Dropdown (Desktop) */}
             <div 
@@ -84,8 +93,12 @@ export function Header() {
                 aria-label="User menu"
                 aria-expanded={isUserMenuOpen}
               >
-                <div className="w-8 h-8 rounded-full bg-gradient-primary text-white flex items-center justify-center font-medium text-sm">
-                  FC
+                <div className="w-8 h-8 rounded-full bg-gradient-primary text-white flex items-center justify-center font-medium text-sm overflow-hidden">
+                  {avatarUrl ? (
+                    <img src={avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
+                  ) : (
+                    'FC'
+                  )}
                 </div>
                 <ChevronDown className={cn(
                   "w-4 h-4 text-foreground-secondary transition-transform",
@@ -110,13 +123,18 @@ export function Header() {
                       <User className="w-4 h-4" />
                       Profile Settings
                     </Link>
-                    <button
-                      onClick={closeUserMenu}
-                      className="w-full flex items-center gap-3 px-4 py-2 text-sm text-foreground-secondary hover:bg-surface-hover hover:text-foreground transition-colors"
-                    >
-                      <HelpCircle className="w-4 h-4" />
-                      Help & Support
-                    </button>
+                    <div className="relative group">
+                      <button
+                        onClick={closeUserMenu}
+                        className="flex w-full items-center gap-3 px-4 py-2 text-sm text-foreground-secondary hover:bg-surface-hover hover:text-foreground transition-colors"
+                      >
+                        <HelpCircle className="w-4 h-4" />
+                        Help & Support
+                      </button>
+                      <div className="absolute left-full top-1/2 -translate-y-1/2 ml-2 px-3 py-1.5 bg-gray-900 text-white text-xs rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 whitespace-nowrap z-50 pointer-events-none">
+                        Coming Soon
+                      </div>
+                    </div>
                   </div>
 
                   <div className="border-t border-border pt-1 mt-1">

@@ -16,10 +16,14 @@ export function Analytics() {
     <div className="space-y-8">
       {/* Header */}
       <div>
-        <h1 className="text-h1 font-bold text-foreground">Analytics</h1>
-        <p className="text-foreground-secondary mt-2">
-          Insights and analytics for your tools usage and spending
-        </p>
+        <h1 className="text-h1 font-bold bg-gradient-to-r from-cyan-300 via-blue-600 to-cyan-300 bg-clip-text text-transparent animate-gradient-title">
+          Analytics
+        </h1>
+        <div className="overflow-hidden mt-2">
+          <p className="text-foreground-secondary animate-scroll-left whitespace-nowrap">
+            Insights and analytics for your tools usage and spending
+          </p>
+        </div>
       </div>
 
       {/* Search Bar */}

@@ -1,16 +1,23 @@
 import { useState } from 'react';
-import { Plus, Search, Filter } from 'lucide-react';
+import { Plus, Search, Filter, Download } from 'lucide-react';
 import { Button, Input } from '@/components/ui';
 import { ToolsFilters } from '@/components/features/ToolsFilters';
 import { ToolsCatalog } from '@/components/features/ToolsCatalog';
+import { ExportDialog } from '@/components/features/ExportDialog';
 import { useFiltersStore, useModalStore } from '@/stores';
+import { useTools } from '@/hooks';
+import { ExportColumn } from '@/lib/exportUtils';
 
 export function Tools() {
   const [showFilters, setShowFilters] = useState(true);
+  const [showExportDialog, setShowExportDialog] = useState(false);
   
   // Use Zustand stores
   const { searchQuery, setSearchQuery, selectedCategories, selectedDepartments, selectedStatus, minCost, maxCost } = useFiltersStore();
   const { openAddToolModal } = useModalStore();
+  
+  // Fetch tools data for export
+  const { data: toolsData } = useTools();
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
@@ -25,15 +32,25 @@ export function Tools() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-h1 font-bold text-foreground">Tools</h1>
-          <p className="text-foreground-secondary mt-2">
-            Manage your SaaS tools catalog
-          </p>
+          <h1 className="text-h1 font-bold bg-gradient-to-r from-cyan-300 via-blue-600 to-cyan-300 bg-clip-text text-transparent animate-gradient-title">
+            Tools
+          </h1>
+          <div className="overflow-hidden mt-2">
+            <p className="text-foreground-secondary animate-scroll-left whitespace-nowrap">
+              Manage your SaaS tools catalog
+            </p>
+          </div>
         </div>
-        <Button onClick={handleAddTool}>
-          <Plus className="w-4 h-4 mr-2" />
-          Add Tool
-        </Button>
+        <div className="flex gap-3">
+          <Button variant="secondary" onClick={() => setShowExportDialog(true)}>
+            <Download className="w-4 h-4 mr-2" />
+            Export
+          </Button>
+          <Button className="bg-gradient-to-r from-blue-600 to-slate-400 text-white hover:from-blue-700 hover:to-slate-500 transition-all" onClick={handleAddTool}>
+            <Plus className="w-4 h-4 mr-2" />
+            Add Tool
+          </Button>
+        </div>
       </div>
 
       {/* Search and Filters */}
@@ -77,6 +94,25 @@ export function Tools() {
           />
         </div>
       </div>
+
+      {/* Export Dialog */}
+      <ExportDialog
+        isOpen={showExportDialog}
+        onClose={() => setShowExportDialog(false)}
+        data={toolsData?.tools || []}
+        availableColumns={[
+          { header: 'Tool Name', key: 'name' },
+          { header: 'Category', key: 'category' },
+          { header: 'Department', key: 'department' },
+          { header: 'Status', key: 'status' },
+          { header: 'Cost (€)', key: 'cost' },
+          { header: 'Users', key: 'users' },
+          { header: 'Renewal Date', key: 'renewalDate' },
+          { header: 'Description', key: 'description', width: 40 },
+        ]}
+        defaultFilename="tools-catalog"
+        title="Internal Tools Catalog"
+      />
     </div>
   );
 }

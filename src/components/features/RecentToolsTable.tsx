@@ -4,7 +4,8 @@ import { formatCurrency, formatDate } from '@/lib/utils';
 import { useTools } from '@/hooks';
 import { useModalStore } from '@/stores';
 import { Tool } from '@/types';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
+import { getToolLogo, getToolInitial } from '@/lib/toolLogos';
 
 /**
  * RecentToolsTable - Dashboard table showing recently updated tools.
@@ -49,22 +50,65 @@ export function RecentToolsTable({ searchQuery = '' }: RecentToolsTableProps) {
   });
 
   const { openToolDetails, openEditToolModal } = useModalStore();
+  
+  // Sorting state
+  const [sortColumn, setSortColumn] = useState<'name' | 'users' | 'cost' | null>(null);
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
 
-  // Filter tools based on search query
+  // Filter and sort tools based on search query and sort state
   const filteredTools = useMemo(() => {
-    const tools = toolsResponse?.data || [];
+    let tools = toolsResponse?.data || [];
     
-    if (!searchQuery.trim()) {
-      return tools;
+    // Apply search filter
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      tools = tools.filter((tool) => 
+        (tool.name || '').toLowerCase().includes(query) ||
+        (tool.category || '').toLowerCase().includes(query) ||
+        (tool.owner_department || '').toLowerCase().includes(query)
+      );
     }
-
-    const query = searchQuery.toLowerCase();
-    return tools.filter((tool) => 
-      (tool.name || '').toLowerCase().includes(query) ||
-      (tool.category || '').toLowerCase().includes(query) ||
-      (tool.owner_department || '').toLowerCase().includes(query)
-    );
-  }, [toolsResponse, searchQuery]);
+    
+    // Apply sorting
+    if (sortColumn) {
+      tools = [...tools].sort((a, b) => {
+        let aValue: string | number = '';
+        let bValue: string | number = '';
+        
+        switch (sortColumn) {
+          case 'name':
+            aValue = (a.name || '').toLowerCase();
+            bValue = (b.name || '').toLowerCase();
+            break;
+          case 'users':
+            aValue = a.active_users_count || 0;
+            bValue = b.active_users_count || 0;
+            break;
+          case 'cost':
+            aValue = a.monthly_cost || 0;
+            bValue = b.monthly_cost || 0;
+            break;
+        }
+        
+        if (aValue < bValue) return sortDirection === 'asc' ? -1 : 1;
+        if (aValue > bValue) return sortDirection === 'asc' ? 1 : -1;
+        return 0;
+      });
+    }
+    
+    return tools;
+  }, [toolsResponse, searchQuery, sortColumn, sortDirection]);
+  
+  const handleSort = (column: 'name' | 'users' | 'cost') => {
+    if (sortColumn === column) {
+      // Toggle direction if same column
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+    } else {
+      // New column, default to ascending
+      setSortColumn(column);
+      setSortDirection('asc');
+    }
+  };
 
   const handleViewDetails = (tool: Tool) => {
     openToolDetails(tool.id);
@@ -96,22 +140,31 @@ export function RecentToolsTable({ searchQuery = '' }: RecentToolsTableProps) {
       <TableHeader>
         <TableRow>
           <TableHead>
-            <button className="flex items-center gap-1 hover:text-foreground transition-colors">
+            <button 
+              onClick={() => handleSort('name')}
+              className="flex items-center gap-1 hover:text-foreground transition-colors"
+            >
               Tool
-              <ArrowUpDown className="w-4 h-4" />
+              <ArrowUpDown className={`w-4 h-4 ${sortColumn === 'name' ? 'text-primary' : ''}`} />
             </button>
           </TableHead>
           <TableHead>Department</TableHead>
           <TableHead>
-            <button className="flex items-center gap-1 hover:text-foreground transition-colors">
+            <button 
+              onClick={() => handleSort('users')}
+              className="flex items-center gap-1 hover:text-foreground transition-colors"
+            >
               Users
-              <ArrowUpDown className="w-4 h-4" />
+              <ArrowUpDown className={`w-4 h-4 ${sortColumn === 'users' ? 'text-primary' : ''}`} />
             </button>
           </TableHead>
           <TableHead>
-            <button className="flex items-center gap-1 hover:text-foreground transition-colors">
+            <button 
+              onClick={() => handleSort('cost')}
+              className="flex items-center gap-1 hover:text-foreground transition-colors"
+            >
               Monthly Cost
-              <ArrowUpDown className="w-4 h-4" />
+              <ArrowUpDown className={`w-4 h-4 ${sortColumn === 'cost' ? 'text-primary' : ''}`} />
             </button>
           </TableHead>
           <TableHead>Status</TableHead>
@@ -124,9 +177,17 @@ export function RecentToolsTable({ searchQuery = '' }: RecentToolsTableProps) {
           <TableRow key={tool.id}>
             <TableCell>
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-gradient-primary flex items-center justify-center text-white font-semibold text-sm">
-                  {tool.name?.charAt(0) || '?'}
-                </div>
+                {getToolLogo(tool.name) ? (
+                  <img 
+                    src={getToolLogo(tool.name)!} 
+                    alt={tool.name || 'Tool'} 
+                    className="w-8 h-8 rounded-lg object-contain bg-white p-1"
+                  />
+                ) : (
+                  <div className="w-8 h-8 rounded-lg bg-gradient-primary flex items-center justify-center text-white font-semibold text-sm">
+                    {getToolInitial(tool.name)}
+                  </div>
+                )}
                 <div>
                   <div className="font-medium">{tool.name || 'Unknown'}</div>
                   <div className="text-xs text-foreground-secondary">{tool.category || 'N/A'}</div>

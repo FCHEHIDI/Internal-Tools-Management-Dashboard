@@ -2,12 +2,13 @@ import { HTMLAttributes, forwardRef } from 'react';
 import { cn } from '@/lib/utils';
 
 export interface CardProps extends HTMLAttributes<HTMLDivElement> {
-  variant?: 'default' | 'gradient';
-  gradient?: 'primary' | 'success' | 'warning' | 'danger' | 'info';
+  variant?: 'default' | 'gradient' | 'bordered';
+  gradient?: 'primary' | 'success' | 'warning' | 'danger' | 'info' | 'gold' | 'platinum' | 'sapphire' | 'ruby';
+  borderColor?: 'gold' | 'platinum' | 'sapphire' | 'ruby';
 }
 
 export const Card = forwardRef<HTMLDivElement, CardProps>(
-  ({ className, variant = 'default', gradient, children, ...props }, ref) => {
+  ({ className, variant = 'default', gradient, borderColor, children, ...props }, ref) => {
     return (
       <div
         ref={ref}
@@ -22,6 +23,17 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
             gradient === 'warning' && 'bg-gradient-warning',
             gradient === 'danger' && 'bg-gradient-danger',
             gradient === 'info' && 'bg-gradient-info',
+            gradient === 'gold' && 'bg-gradient-gold',
+            gradient === 'platinum' && 'bg-gradient-platinum',
+            gradient === 'sapphire' && 'bg-gradient-sapphire',
+            gradient === 'ruby' && 'bg-gradient-ruby',
+          ],
+          variant === 'bordered' && [
+            'bg-surface/50 backdrop-blur-sm border-2 shadow-md hover:shadow-lg',
+            borderColor === 'gold' && 'border-[#d4af37] hover:border-[#b8860b]',
+            borderColor === 'platinum' && 'border-[#e5e4e2] hover:border-[#9c9c9c]',
+            borderColor === 'sapphire' && 'border-[#0f52ba] hover:border-[#0d47a1]',
+            borderColor === 'ruby' && 'border-[#e0115f] hover:border-[#c41e3a]',
           ],
           className
         )}

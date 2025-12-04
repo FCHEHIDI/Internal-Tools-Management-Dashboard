@@ -117,7 +117,7 @@ export function CampaignBanner({
     >
       <Card className="relative overflow-hidden border-2 border-primary-200 dark:border-primary-800">
         {/* Gradient Background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-primary-50 via-purple-50 to-pink-50 dark:from-primary-950 dark:via-purple-950 dark:to-pink-950" />
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-slate-50 to-gray-100 dark:from-blue-950 dark:via-slate-900 dark:to-gray-900" />
         
         {/* Animated Background Sparkles */}
         <motion.div
@@ -136,7 +136,7 @@ export function CampaignBanner({
         </motion.div>
         
         <motion.div
-          className="absolute bottom-20 left-20 text-purple-300 dark:text-purple-700"
+          className="absolute bottom-20 left-20 text-slate-300 dark:text-slate-600"
           animate={{
             rotate: [360, 0],
             scale: [1, 1.3, 1],
@@ -243,7 +243,7 @@ export function CampaignBanner({
                 className="w-64 h-64 object-contain"
               />
             ) : (
-              <div className="w-48 h-48 flex items-center justify-center bg-gradient-to-br from-primary-400 to-purple-500 rounded-2xl shadow-2xl">
+              <div className="w-48 h-48 flex items-center justify-center bg-gradient-to-br from-blue-400 to-slate-400 rounded-2xl shadow-2xl">
                 <Rocket className="w-24 h-24 text-white" />
               </div>
             )}

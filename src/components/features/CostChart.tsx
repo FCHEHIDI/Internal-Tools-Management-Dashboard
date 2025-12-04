@@ -64,18 +64,21 @@ export function CostChart() {
           */}
           <Tooltip
             contentStyle={{
-              backgroundColor: '#374151',
-              border: '1px solid #6b7280',
+              backgroundColor: 'rgba(15, 23, 42, 0.95)',
+              border: '1px solid rgba(212, 175, 55, 0.3)',
               borderRadius: '8px',
-              fontSize: '10px',
+              fontSize: '12px',
+              backdropFilter: 'blur(10px)',
+              boxShadow: '0 0 20px rgba(212, 175, 55, 0.2)',
             }}
             itemStyle={{
-              color: '#fef3c7',
-              fontSize: '10px',
+              color: '#d4af37',
+              fontSize: '12px',
             }}
             labelStyle={{
-              color: '#fef3c7',
-              fontSize: '10px',
+              color: '#d4af37',
+              fontSize: '12px',
+              fontWeight: 'bold',
             }}
             formatter={(value: number) => [`€${value.toLocaleString()}`]}
           />
@@ -103,7 +106,7 @@ export function CostChart() {
             stroke="hsl(var(--primary))"
             strokeWidth={2}
             dot={{ fill: 'hsl(var(--primary))', r: 4 }}
-            activeDot={{ r: 6 }}
+            activeDot={{ r: 6, fill: '#d4af37' }}
           />
           
           {/* 
