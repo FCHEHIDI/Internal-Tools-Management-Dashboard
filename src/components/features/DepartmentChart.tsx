@@ -106,7 +106,7 @@ export function DepartmentChart() {
               color: '#fef3c7',
               fontSize: '10px',
             }}
-            formatter={(value: number, name: string) => [`€${value.toLocaleString()}`]}
+            formatter={(value: number) => [`€${value.toLocaleString()}`]}
             labelFormatter={(name: string) => name}
           />
           <Legend

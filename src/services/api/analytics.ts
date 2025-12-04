@@ -64,7 +64,7 @@ export const getTopTools = async (limit: number = 6) => {
  * Fetch cost evolution over time
  * Calculates from tools data to show month-over-month spending evolution
  */
-export const getCostEvolution = async (period: string = '6m') => {
+export const getCostEvolution = async () => {
   try {
     const [analyticsResponse, toolsResponse] = await Promise.all([
       apiClient.get('/analytics'),
@@ -73,10 +73,6 @@ export const getCostEvolution = async (period: string = '6m') => {
     
     const currentTotal = analyticsResponse.data.budget_overview?.current_month_total || 17928;
     const previousTotal = analyticsResponse.data.budget_overview?.previous_month_total || 17581;
-    const tools = toolsResponse.data;
-    
-    // Calculate total from all tools (this is the current month)
-    const calculatedTotal = tools.reduce((sum: number, tool: any) => sum + tool.monthly_cost, 0);
     
     // Generate 6 months of evolution data
     const months = ['Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];

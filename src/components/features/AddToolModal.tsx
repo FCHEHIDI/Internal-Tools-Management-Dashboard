@@ -4,29 +4,13 @@ import { Button } from '@/components/ui/Button';
 import { Input, Label } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
 import { Textarea } from '@/components/ui/Textarea';
+import { useModalStore } from '@/stores';
 
 /**
- * Props for the AddToolModal component.
- * 
- * @interface AddToolModalProps
- * @property {boolean} isOpen - Controls modal visibility (controlled component pattern)
- * @property {() => void} onClose - Callback when modal should close (user clicks cancel/backdrop/escape)
- * @property {(data: ToolFormData) => void} [onSubmit] - Optional callback with form data on successful submission
- * 
- * @example
- * ```tsx
- * const [isOpen, setIsOpen] = useState(false);
- * 
- * <AddToolModal
- *   isOpen={isOpen}
- *   onClose={() => setIsOpen(false)}
- *   onSubmit={(data) => createTool(data)}
- * />
- * ```
+ * AddToolModal component.
+ * Uses modal store for state management.
  */
 interface AddToolModalProps {
-  isOpen: boolean;
-  onClose: () => void;
   onSubmit?: (data: ToolFormData) => void;
 }
 
@@ -100,7 +84,9 @@ export interface ToolFormData {
  * - Delegates business logic to parent (API calls, global state updates)
  * - Makes it testable and reusable
  */
-export function AddToolModal({ isOpen, onClose, onSubmit }: AddToolModalProps) {
+export function AddToolModal({ onSubmit }: AddToolModalProps) {
+  const { isAddToolModalOpen, closeAddToolModal } = useModalStore();
+  
   /**
    * Local form state using controlled inputs pattern.
    * 
@@ -277,12 +263,12 @@ export function AddToolModal({ isOpen, onClose, onSubmit }: AddToolModalProps) {
     setErrors({});
     
     // Notify parent component to close the modal
-    onClose();
+    closeAddToolModal();
   };
 
   return (
     <Modal
-      isOpen={isOpen}
+      isOpen={isAddToolModalOpen}
       onClose={handleClose}
       title="Add New Tool"
       size="lg"
