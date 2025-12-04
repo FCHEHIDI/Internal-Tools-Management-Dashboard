@@ -16,8 +16,8 @@ export function Tools() {
   const { searchQuery, setSearchQuery, selectedCategories, selectedDepartments, selectedStatus, minCost, maxCost } = useFiltersStore();
   const { openAddToolModal } = useModalStore();
   
-  // Fetch tools data for export
-  const { data: toolsData } = useTools();
+  // Fetch ALL tools data for export
+  const { data: toolsData } = useTools({ _limit: 1000 });
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
