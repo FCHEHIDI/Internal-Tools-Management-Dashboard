@@ -41,8 +41,8 @@ export function Header() {
             </span>
           </Link>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-1">
+          {/* Desktop Navigation - Visible only on large screens (1024px+) */}
+          <nav className="hidden lg:flex items-center gap-1">
             {navigation.map((item) => {
               const isActive = location.pathname === item.href;
               const Icon = item.icon;
@@ -153,10 +153,10 @@ export function Header() {
               )}
             </div>
             
-            {/* Mobile Menu Button */}
+            {/* Mobile Menu Button - Hidden on desktop (lg+), visible on tablet portrait and mobile */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="sm:hidden p-2 hover:bg-surface-hover rounded-lg transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
+              className="lg:hidden p-2 hover:bg-surface-hover rounded-lg transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
               aria-label="Toggle menu"
               aria-expanded={isMobileMenuOpen}
             >
@@ -169,9 +169,9 @@ export function Header() {
           </div>
         </div>
 
-        {/* Mobile Navigation Drawer */}
+        {/* Mobile Navigation Drawer - Visible on tablet and mobile */}
         {isMobileMenuOpen && (
-          <nav className="sm:hidden py-4 border-t border-border">
+          <nav className="lg:hidden py-4 border-t border-border">
             {/* Mobile User Info */}
             <div className="px-4 py-3 mb-2 border-b border-border">
               <div className="flex items-center gap-3">
