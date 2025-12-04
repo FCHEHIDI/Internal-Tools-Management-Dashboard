@@ -50,17 +50,29 @@ export const getDepartmentCosts = async () => {
 /**
  * Fetch top tools by usage
  * Calculated from tools data since analytics endpoint doesn't provide it
+ * Only includes tools with valid user count and cost data
  */
 export const getTopTools = async (limit: number = 6) => {
   try {
     const response = await apiClient.get('/tools?_limit=1000&_sort=active_users_count&_order=desc');
     const tools = response.data;
     
-    return tools.slice(0, limit).map((tool: any) => ({
-      name: tool.name,
-      users: tool.active_users_count,
-      cost: tool.monthly_cost
-    }));
+    // Filter tools with valid data (both users and cost must be present)
+    const validTools = tools
+      .filter((tool: any) => 
+        tool.active_users_count != null && 
+        tool.active_users_count > 0 &&
+        tool.monthly_cost != null && 
+        tool.monthly_cost > 0
+      )
+      .slice(0, limit)
+      .map((tool: any) => ({
+        name: tool.name,
+        users: tool.active_users_count,
+        cost: tool.monthly_cost
+      }));
+    
+    return validTools;
   } catch (error) {
     console.error('Failed to fetch top tools:', error);
     throw error;
