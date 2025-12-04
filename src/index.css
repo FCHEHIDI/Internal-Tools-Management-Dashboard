@@ -13,7 +13,7 @@
     --foreground-secondary: 215 16% 47%;
     --surface: 0 0% 100%;
     --surface-hover: 210 40% 96%;
-    --border: 214 32% 91%;
+    --border: 189 100% 50%;
     --primary: 262 83% 58%;
     --secondary: 220 14% 96%;
     
@@ -31,7 +31,7 @@
     --foreground-secondary: 215 20% 65%;
     --surface: 222 47% 15%;
     --surface-hover: 222 47% 18%;
-    --border: 217 19% 27%;
+    --border: 189 100% 50%;
     --primary: 262 83% 58%;
     --secondary: 222 47% 15%;
     
@@ -74,5 +74,49 @@
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+
+  /* Animations */
+  .animate-fade-in {
+    animation: fadeIn 0.2s ease-out;
+  }
+
+  .animate-slide-up {
+    animation: slideUp 0.3s ease-out;
+  }
+
+  .animate-slide-down {
+    animation: slideDown 0.2s ease-out;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 }

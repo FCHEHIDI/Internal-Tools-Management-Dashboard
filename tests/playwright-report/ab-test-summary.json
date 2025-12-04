@@ -1,0 +1,23 @@
+{
+  "timestamp": "2025-12-02T17:00:38.514Z",
+  "variants": [
+    {
+      "variant": "widget",
+      "project": "chromium-widget",
+      "totalTests": 2,
+      "passed": 1,
+      "failed": 1,
+      "avgDuration": 0,
+      "metrics": {
+        "impressions": 2,
+        "clicks": 2,
+        "formStarts": 1,
+        "formCompletions": 1,
+        "ctr": 1,
+        "conversionRate": 0.5,
+        "avgTimeToConversion": 0
+      }
+    }
+  ],
+  "comparison": null
+}

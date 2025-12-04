@@ -14,12 +14,15 @@ export function formatCurrency(amount: number): string {
   }).format(amount);
 }
 
-export function formatDate(date: string): string {
+export function formatDate(date: string | null | undefined): string {
+  if (!date) return 'N/A';
+  const dateObj = new Date(date);
+  if (isNaN(dateObj.getTime())) return 'Invalid date';
   return new Intl.DateTimeFormat('en-US', {
     year: 'numeric',
     month: 'short',
     day: 'numeric',
-  }).format(new Date(date));
+  }).format(dateObj);
 }
 
 export function calculatePercentageChange(current: number, previous: number): number {

@@ -12,6 +12,7 @@ export default {
         surface: 'hsl(var(--surface))',
         'surface-hover': 'hsl(var(--surface-hover))',
         border: 'hsl(var(--border))',
+        'border-neon': '#00d4ff',
         primary: 'hsl(var(--primary))',
         secondary: 'hsl(var(--secondary))',
         'status-active': 'hsl(var(--status-active))',
@@ -37,6 +38,8 @@ export default {
       },
       boxShadow: {
         card: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
+        'neon': '0 0 10px rgba(0, 212, 255, 0.5), 0 0 20px rgba(0, 212, 255, 0.3)',
+        'neon-sm': '0 0 5px rgba(0, 212, 255, 0.4)',
       },
     },
   },

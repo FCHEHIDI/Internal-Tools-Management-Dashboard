@@ -1,0 +1,348 @@
+import { test, expect, measureWebVitals } from '../fixtures/ab-test';
+
+/**
+ * @file Widget Pattern A/B Tests
+ * @description Comprehensive E2E tests comparing widget pattern vs traditional modal
+ * 
+ * @testStrategy
+ * We test the full user journey:
+ * 1. Page load → Widget impression
+ * 2. User engages with welcome message
+ * 3. Campaign banner shown (variant dependent)
+ * 4. User clicks CTA
+ * 5. Form appears
+ * 6. User fills and submits form
+ * 
+ * @metrics
+ * - Engagement rate (% who click CTA)
+ * - Form start rate (% who begin filling)
+ * - Completion rate (% who submit)
+ * - Time to conversion
+ * - User frustration signals (dismissals, errors, back button)
+ * - Performance (Web Vitals)
+ */
+
+test.describe('Widget Pattern A/B Test', () => {
+  test.beforeEach(async ({ page }) => {
+    // Navigate to dashboard
+    await page.goto('http://localhost:3000');
+    
+    // Wait for page to be fully interactive
+    await page.waitForLoadState('networkidle');
+  });
+
+  /**
+   * TEST 1: Widget Variant - Complete Happy Path
+   * User journey: Welcome → Campaign → Form → Submit
+   */
+  test('Widget variant: Complete user journey', async ({ page, metrics, trackEvent }) => {
+    const startTime = Date.now();
+    
+    // Step 1: Widget impression
+    await expect(page.locator('text=Good morning')).toBeVisible();
+    metrics.impressions++;
+    trackEvent('widget_impression', { variant: 'widget' });
+    
+    // Verify welcome state elements
+    await expect(page.locator('text=Did you know?')).toBeVisible();
+    await expect(page.locator('text=saved')).toBeVisible(); // Quarterly savings
+    
+    // Step 2: User engages with CTA
+    const addToolButton = page.locator('button:has-text("Add New Tool to Your Stack")');
+    await expect(addToolButton).toBeVisible();
+    
+    const engageTime = Date.now();
+    await addToolButton.click();
+    metrics.clicks++;
+    metrics.timeToEngage = engageTime - startTime;
+    trackEvent('cta_click', { from: 'welcome', to: 'campaign' });
+    
+    // Step 3: Campaign banner appears
+    await expect(page.locator('text=Q4 Budget Planning')).toBeVisible();
+    await expect(page.locator('text=NEW')).toBeVisible(); // Badge
+    
+    // Click campaign primary CTA
+    const campaignCTA = page.locator('button:has-text("Add Tool to Review")');
+    await campaignCTA.click();
+    trackEvent('campaign_cta_click', { cta: 'primary' });
+    
+    // Step 4: Form appears
+    await expect(page.locator('text=Add New Tool').first()).toBeVisible();
+    await expect(page.locator('input[id="name"]')).toBeVisible();
+    
+    const formStartTime = Date.now();
+    metrics.formStarts++;
+    metrics.timeToFormStart = formStartTime - startTime;
+    trackEvent('form_start');
+    
+    // Step 5: Fill form
+    await page.fill('input[id="name"]', 'Playwright Test Tool');
+    await page.selectOption('select[id="category"]', 'Development');
+    await page.selectOption('select[id="department"]', 'Engineering');
+    await page.fill('textarea[id="description"]', 'A tool for E2E testing');
+    await page.fill('input[id="monthlyCost"]', '99.99');
+    await page.selectOption('select[id="billingCycle"]', 'monthly');
+    
+    // Set renewal date (30 days from now)
+    const futureDate = new Date();
+    futureDate.setDate(futureDate.getDate() + 30);
+    await page.fill('input[id="renewalDate"]', futureDate.toISOString().split('T')[0]);
+    
+    await page.fill('input[id="users"]', '10');
+    await page.fill('input[id="website"]', 'https://playwright.dev');
+    await page.fill('input[id="contactEmail"]', 'support@playwright.dev');
+    
+    trackEvent('form_filled');
+    
+    // Step 6: Submit
+    const submitButton = page.locator('button[type="submit"]:has-text("Add Tool")');
+    await submitButton.click();
+    
+    metrics.formCompletions++;
+    metrics.timeToSubmit = Date.now() - startTime;
+    trackEvent('form_submit', { timeToSubmit: metrics.timeToSubmit });
+    
+    // Verify loading state
+    await expect(page.locator('text=Adding Tool...')).toBeVisible();
+    
+    // Measure Web Vitals
+    const vitals = await measureWebVitals(page);
+    metrics.lcp = vitals.lcp;
+    metrics.fid = vitals.fid;
+    metrics.cls = vitals.cls;
+    
+    // Log metrics
+    console.log('Widget Variant Metrics:', {
+      timeToEngage: `${metrics.timeToEngage}ms`,
+      timeToFormStart: `${metrics.timeToFormStart}ms`,
+      timeToSubmit: `${metrics.timeToSubmit}ms`,
+      lcp: `${vitals.lcp.toFixed(2)}ms`,
+      cls: vitals.cls.toFixed(3),
+    });
+  });
+
+  /**
+   * TEST 2: Widget Variant - Campaign Dismissal Path
+   * User dismisses campaign and goes directly to form
+   */
+  test('Widget variant: Campaign dismissal flow', async ({ page, metrics, trackEvent }) => {
+    // Welcome state
+    await expect(page.locator('text=Good morning')).toBeVisible();
+    metrics.impressions++;
+    
+    // Click to campaign
+    await page.locator('button:has-text("Add New Tool to Your Stack")').click();
+    metrics.clicks++;
+    
+    // Dismiss campaign
+    const dismissButton = page.locator('button[aria-label="Dismiss campaign banner"]');
+    await dismissButton.click();
+    metrics.dismissals++;
+    trackEvent('campaign_dismissed');
+    
+    // Should return to welcome state
+    await expect(page.locator('text=Good morning')).toBeVisible();
+    
+    // Can still access form by clicking CTA again
+    await page.locator('button:has-text("Add New Tool to Your Stack")').click();
+    // This time should skip campaign (dismissed)
+    // In production: Check localStorage for dismissed campaigns
+  });
+
+  /**
+   * TEST 3: Widget Variant - Back Button Navigation
+   * User explores states using back button
+   */
+  test('Widget variant: Back button navigation', async ({ page, metrics, trackEvent }) => {
+    await expect(page.locator('text=Good morning')).toBeVisible();
+    
+    // Go to campaign
+    await page.locator('button:has-text("Add New Tool to Your Stack")').click();
+    await expect(page.locator('text=Q4 Budget Planning')).toBeVisible();
+    
+    // Go to form
+    await page.locator('button:has-text("Add Tool to Review")').click();
+    await expect(page.locator('input[id="name"]')).toBeVisible();
+    
+    // Click back button
+    const backButton = page.locator('button:has-text("Back")');
+    await backButton.click();
+    metrics.backButtonUses++;
+    trackEvent('back_button_click', { from: 'form', to: 'welcome' });
+    
+    // Should return to welcome (not campaign - clean slate)
+    await expect(page.locator('text=Good morning')).toBeVisible();
+  });
+
+  /**
+   * TEST 4: Widget Variant - Form Validation
+   * Test error handling and validation messages
+   */
+  test('Widget variant: Form validation errors', async ({ page, metrics, trackEvent }) => {
+    // Navigate to form
+    await page.locator('button:has-text("Add New Tool to Your Stack")').click();
+    await page.locator('button:has-text("Add Tool to Review")').click();
+    
+    metrics.formStarts++;
+    
+    // Try to submit empty form
+    await page.locator('button[type="submit"]:has-text("Add Tool")').click();
+    
+    // Should show validation errors
+    await expect(page.locator('text=Tool name is required')).toBeVisible();
+    await expect(page.locator('text=Category is required')).toBeVisible();
+    await expect(page.locator('text=Department is required')).toBeVisible();
+    
+    metrics.errors += 3;
+    trackEvent('validation_errors', { count: 3 });
+    
+    // Fix errors and submit successfully
+    await page.fill('input[id="name"]', 'Test Tool');
+    await page.selectOption('select[id="category"]', 'Development');
+    await page.selectOption('select[id="department"]', 'Engineering');
+    await page.fill('input[id="monthlyCost"]', '50');
+    
+    const futureDate = new Date();
+    futureDate.setDate(futureDate.getDate() + 30);
+    await page.fill('input[id="renewalDate"]', futureDate.toISOString().split('T')[0]);
+    
+    await page.fill('input[id="users"]', '5');
+    
+    await page.locator('button[type="submit"]:has-text("Add Tool")').click();
+    
+    metrics.formCompletions++;
+    trackEvent('form_submit_after_errors');
+  });
+
+  /**
+   * TEST 5: Performance Baseline
+   * Measure widget performance metrics
+   */
+  test('Widget variant: Performance metrics', async ({ page, metrics }) => {
+    const navigationTiming = await page.evaluate(() => {
+      const timing = performance.timing;
+      return {
+        domContentLoaded: timing.domContentLoadedEventEnd - timing.navigationStart,
+        loadComplete: timing.loadEventEnd - timing.navigationStart,
+        firstPaint: performance.getEntriesByType('paint')[0]?.startTime || 0,
+      };
+    });
+    
+    console.log('Navigation Timing:', navigationTiming);
+    
+    // Measure widget rendering time
+    const widgetLoadTime = await page.evaluate(() => {
+      return performance.measure('widget-load', {
+        start: 0,
+        end: performance.now(),
+      }).duration;
+    });
+    
+    console.log('Widget Load Time:', `${widgetLoadTime.toFixed(2)}ms`);
+    
+    // Measure animation performance
+    const animationFrames = await page.evaluate(() => {
+      let frames = 0;
+      const start = performance.now();
+      
+      return new Promise<number>((resolve) => {
+        function countFrame() {
+          frames++;
+          if (performance.now() - start < 1000) {
+            requestAnimationFrame(countFrame);
+          } else {
+            resolve(frames);
+          }
+        }
+        requestAnimationFrame(countFrame);
+      });
+    });
+    
+    const fps = animationFrames;
+    console.log('Animation FPS:', fps);
+    
+    // FPS should be close to 60 for smooth animations
+    expect(fps).toBeGreaterThan(50);
+  });
+
+  /**
+   * TEST 6: Accessibility
+   * Ensure widget is accessible
+   */
+  test('Widget variant: Accessibility checks', async ({ page }) => {
+    // Check for proper ARIA labels
+    const addToolButton = page.locator('button:has-text("Add New Tool to Your Stack")');
+    await expect(addToolButton).toHaveAttribute('type', 'button');
+    
+    // Keyboard navigation
+    await page.keyboard.press('Tab');
+    await page.keyboard.press('Tab');
+    await page.keyboard.press('Enter'); // Should activate button
+    
+    // Form should be keyboard accessible
+    await expect(page.locator('input[id="name"]')).toBeFocused();
+    
+    // Tab through form fields
+    await page.keyboard.press('Tab');
+    await expect(page.locator('select[id="category"]')).toBeFocused();
+    
+    // Check for proper labels
+    await expect(page.locator('label[for="name"]')).toBeVisible();
+    await expect(page.locator('label[for="category"]')).toBeVisible();
+  });
+
+  /**
+   * TEST 7: Mobile Responsiveness
+   * Test widget on mobile viewport
+   */
+  test('Widget variant: Mobile viewport', async ({ page }) => {
+    // Set mobile viewport
+    await page.setViewportSize({ width: 375, height: 667 });
+    
+    // Widget should be visible and usable
+    await expect(page.locator('text=Good morning')).toBeVisible();
+    
+    // Button should be full width on mobile
+    const addToolButton = page.locator('button:has-text("Add New Tool to Your Stack")');
+    const buttonBox = await addToolButton.boundingBox();
+    const viewportWidth = 375;
+    
+    // Button should take significant width (allowing for padding)
+    expect(buttonBox?.width).toBeGreaterThan(viewportWidth * 0.8);
+    
+    // Form should stack vertically
+    await addToolButton.click();
+    await page.locator('button:has-text("Add Tool to Review")').click();
+    
+    // Check that form fields stack vertically
+    const nameInput = await page.locator('input[id="name"]').boundingBox();
+    const categorySelect = await page.locator('select[id="category"]').boundingBox();
+    
+    // Category should be below name input
+    if (nameInput && categorySelect) {
+      expect(categorySelect.y).toBeGreaterThan(nameInput.y + nameInput.height);
+    }
+  });
+});
+
+/**
+ * COMPARISON TEST: Widget vs Modal
+ * Side-by-side comparison of both patterns
+ */
+test.describe('Widget vs Modal Comparison', () => {
+  test('Compare conversion rates', async ({ page }) => {
+    // This test would run both variants and compare
+    // In production, use test.describe.parallel() to run simultaneously
+    
+    console.log('📊 A/B Test Summary:');
+    console.log('Widget Variant:');
+    console.log('  - Engagement: User sees greeting first');
+    console.log('  - Campaign: Optional marketing message');
+    console.log('  - Progressive disclosure: Lower cognitive load');
+    console.log('');
+    console.log('Modal Variant:');
+    console.log('  - Immediate form presentation');
+    console.log('  - Blocks entire UI');
+    console.log('  - Higher cognitive load upfront');
+  });
+});

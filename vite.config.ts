@@ -4,6 +4,7 @@ import path from 'path';
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: '/Internal-Tools-Management-Dashboard/',
   plugins: [react()],
   resolve: {
     alias: {
@@ -24,5 +25,11 @@ export default defineConfig({
         },
       },
     },
+  },
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    setupFiles: './src/test/setup.ts',
+    exclude: ['**/node_modules/**', '**/tests/**', '**/playwright-report/**', '**/test-results/**'],
   },
 });

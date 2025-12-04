@@ -27,6 +27,8 @@ export interface Tool {
   monthly_cost: number;
   previous_month_cost: number;
   owner_department: string;
+  owner_id?: string | number; // Optional as it might not always be present
+  department?: string; // Alias for owner_department for search compatibility
   status: ToolStatus;
   website_url: string;
   active_users_count: number;
