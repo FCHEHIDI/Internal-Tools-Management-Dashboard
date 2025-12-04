@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512"
+     xmlns="http://www.w3.org/2000/svg" role="img" aria-label="TC logo spaced">
+  <defs>
+    <!-- Neon blue gradient -->
+    <linearGradient id="tcGradient" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#4df2ff"/>
+      <stop offset="60%" stop-color="#249dff"/>
+      <stop offset="100%" stop-color="#176fe0"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="100%" height="100%" fill="#061426"/>
+
+  <!-- Rounded square border with neon glow -->
+  <defs>
+    <filter id="neonGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <rect x="48" y="48" width="416" height="416" rx="64" ry="64"
+        stroke="#00d4ff" stroke-width="18" fill="none" filter="url(#neonGlow)"/>
+
+  <!-- Filled TC Letters -->
+  <g fill="url(#tcGradient)">
+    <!-- T -->
+    <rect x="118" y="150" width="180" height="40" rx="6"/>
+    <rect x="193" y="190" width="40" height="180" rx="6"/>
+
+    <!-- C (shifted right) -->
+    <path d="M390 180
+             A100 100 0 1 0 390 340
+             L360 320
+             A70 70 0 1 1 360 200 Z"/>
+  </g>
+</svg>
