@@ -1,10 +1,8 @@
-import { useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import { LoadingSpinner, ErrorMessage } from '@/components/ui';
 import { useTopTools } from '@/hooks';
 
 const PRIMARY_COLOR = '#60a5fa'; // Light blue
-const HOVER_COLOR = '#d4af37'; // Metallic Gold
 
 /**
  * UsageChart - Horizontal bar chart displaying top tools by usage.
@@ -22,16 +20,7 @@ const HOVER_COLOR = '#d4af37'; // Metallic Gold
  * Best for: Categorical comparisons, ranking, part-to-whole analysis
  */
 export function UsageChart() {
-  const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const { data: topToolsData, isLoading, error } = useTopTools(6);
-
-  const onBarEnter = (_: unknown, index: number) => {
-    setActiveIndex(index);
-  };
-
-  const onBarLeave = () => {
-    setActiveIndex(null);
-  };
 
   if (isLoading) {
     return <LoadingSpinner className="h-[300px]" />;

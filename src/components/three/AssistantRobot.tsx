@@ -71,7 +71,7 @@ export function AssistantRobot({
   }), [metalColor, accentColor, eyeColor]);
 
   // Animation
-  useFrame((state) => {
+  useFrame((state: any) => {
     const elapsed = state.clock.elapsedTime;
     const t = elapsed;
 
@@ -105,7 +105,6 @@ export function AssistantRobot({
 
     if (leftArmRef.current && rightArmRef.current) {
       // More dynamic arm movements with gentler sway
-      const armSpeed = 1.2;
       const armRange = 0.15; // Reduced from 0.25 for gentler movement
       
       // Gentle arm sway during slide (smooth and natural)

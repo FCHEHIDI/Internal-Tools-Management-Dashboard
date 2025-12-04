@@ -4,7 +4,6 @@ import { Sparkles, TrendingUp, Lightbulb, Plus } from 'lucide-react';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { StreamingText } from '@/components/ui/StreamingText';
-import { RobotScene } from '@/components/three/RobotScene';
 import { formatCurrency } from '@/lib/utils';
 
 /**

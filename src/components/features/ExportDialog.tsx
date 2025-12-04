@@ -65,8 +65,6 @@ export function ExportDialog({
     csv: FileType,
   };
 
-  const FormatIcon = formatIcons[format];
-
   if (!isOpen) return null;
 
   return (
