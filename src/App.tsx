@@ -12,7 +12,7 @@ import { DeleteConfirmModal } from './components/features/DeleteConfirmModal';
 
 function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/Internal-Tools-Management-Dashboard">
       <Routes>
         <Route path="/" element={<MainLayout />}>
           <Route index element={<Dashboard />} />
