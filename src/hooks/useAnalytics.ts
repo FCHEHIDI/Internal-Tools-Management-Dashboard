@@ -37,10 +37,10 @@ export const useTopTools = (limit: number = 6) => {
 /**
  * Hook to fetch cost evolution over time
  */
-export const useCostEvolution = (period: string = '6m') => {
+export const useCostEvolution = () => {
   return useQuery({
-    queryKey: ['analytics', 'cost-evolution', period],
-    queryFn: () => getCostEvolution(period),
+    queryKey: ['analytics', 'cost-evolution'],
+    queryFn: () => getCostEvolution(),
     staleTime: 1000 * 60 * 10,
   });
 };

@@ -66,10 +66,7 @@ export const getTopTools = async (limit: number = 6) => {
  */
 export const getCostEvolution = async () => {
   try {
-    const [analyticsResponse, toolsResponse] = await Promise.all([
-      apiClient.get('/analytics'),
-      apiClient.get('/tools?_limit=1000')
-    ]);
+    const analyticsResponse = await apiClient.get('/analytics');
     
     const currentTotal = analyticsResponse.data.budget_overview?.current_month_total || 17928;
     const previousTotal = analyticsResponse.data.budget_overview?.previous_month_total || 17581;
