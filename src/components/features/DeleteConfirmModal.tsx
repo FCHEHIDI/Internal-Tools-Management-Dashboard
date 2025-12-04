@@ -35,7 +35,7 @@ export function DeleteConfirmModal() {
               <Button variant="secondary" onClick={closeDeleteConfirm}>
                 Cancel
               </Button>
-              <Button variant="default" onClick={handleDelete} className="bg-status-unused hover:bg-red-600">
+              <Button variant="danger" onClick={handleDelete}>
                 Delete
               </Button>
             </div>

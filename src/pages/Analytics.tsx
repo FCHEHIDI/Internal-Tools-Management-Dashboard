@@ -36,7 +36,7 @@ export function Analytics() {
 
       {/* Quick Stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card className="p-6">
+        <Card className="p-6 transition-all duration-300 hover:shadow-neon hover:scale-[1.02] hover:border-border-neon cursor-pointer border-2">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-foreground-secondary">Total Monthly Spend</p>
@@ -46,13 +46,13 @@ export function Analytics() {
                 +12% from last month
               </p>
             </div>
-            <div className="w-12 h-12 rounded-lg bg-gradient-primary/10 flex items-center justify-center">
+            <div className="w-12 h-12 rounded-lg bg-gradient-primary/10 flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
               <DollarSign className="w-6 h-6 text-primary" />
             </div>
           </div>
         </Card>
 
-        <Card className="p-6">
+        <Card className="p-6 transition-all duration-300 hover:shadow-neon hover:scale-[1.02] hover:border-border-neon cursor-pointer border-2">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-foreground-secondary">Average Cost per User</p>
@@ -62,13 +62,13 @@ export function Analytics() {
                 +6.8% from last month
               </p>
             </div>
-            <div className="w-12 h-12 rounded-lg bg-gradient-info/10 flex items-center justify-center">
+            <div className="w-12 h-12 rounded-lg bg-gradient-info/10 flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
               <Users className="w-6 h-6 text-blue-500" />
             </div>
           </div>
         </Card>
 
-        <Card className="p-6">
+        <Card className="p-6 transition-all duration-300 hover:shadow-neon hover:scale-[1.02] hover:border-border-neon cursor-pointer border-2">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-foreground-secondary">Tools Utilization</p>
@@ -78,7 +78,7 @@ export function Analytics() {
                 +3.2% from last month
               </p>
             </div>
-            <div className="w-12 h-12 rounded-lg bg-gradient-success/10 flex items-center justify-center">
+            <div className="w-12 h-12 rounded-lg bg-gradient-success/10 flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
               <BarChart3 className="w-6 h-6 text-status-active" />
             </div>
           </div>

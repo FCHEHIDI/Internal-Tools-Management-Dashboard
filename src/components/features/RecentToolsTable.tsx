@@ -60,9 +60,9 @@ export function RecentToolsTable({ searchQuery = '' }: RecentToolsTableProps) {
 
     const query = searchQuery.toLowerCase();
     return tools.filter((tool) => 
-      tool.name.toLowerCase().includes(query) ||
-      tool.category.toLowerCase().includes(query) ||
-      tool.department.toLowerCase().includes(query)
+      (tool.name || '').toLowerCase().includes(query) ||
+      (tool.category || '').toLowerCase().includes(query) ||
+      (tool.owner_department || '').toLowerCase().includes(query)
     );
   }, [toolsResponse, searchQuery]);
 
@@ -125,23 +125,23 @@ export function RecentToolsTable({ searchQuery = '' }: RecentToolsTableProps) {
             <TableCell>
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded-lg bg-gradient-primary flex items-center justify-center text-white font-semibold text-sm">
-                  {tool.name.charAt(0)}
+                  {tool.name?.charAt(0) || '?'}
                 </div>
                 <div>
-                  <div className="font-medium">{tool.name}</div>
-                  <div className="text-xs text-foreground-secondary">{tool.category}</div>
+                  <div className="font-medium">{tool.name || 'Unknown'}</div>
+                  <div className="text-xs text-foreground-secondary">{tool.category || 'N/A'}</div>
                 </div>
               </div>
             </TableCell>
             <TableCell>
-              <span className="text-foreground-secondary">{tool.owner_department}</span>
+              <span className="text-foreground-secondary">{tool.owner_department || 'N/A'}</span>
             </TableCell>
             <TableCell>
-              <span className="font-medium">{tool.active_users_count}</span>
+              <span className="font-medium">{tool.active_users_count || 0}</span>
             </TableCell>
             <TableCell>
               <div>
-                <div className="font-medium">{formatCurrency(tool.monthly_cost)}</div>
+                <div className="font-medium">{formatCurrency(tool.monthly_cost || 0)}</div>
                 {tool.monthly_cost !== tool.previous_month_cost && (
                   <div className="text-xs text-foreground-secondary">
                     {tool.monthly_cost > tool.previous_month_cost ? '+' : ''}
@@ -151,35 +151,38 @@ export function RecentToolsTable({ searchQuery = '' }: RecentToolsTableProps) {
               </div>
             </TableCell>
             <TableCell>
-              <Badge status={tool.status} size="sm">
-                {tool.status.charAt(0).toUpperCase() + tool.status.slice(1)}
+              <Badge status={tool.status || 'active'} size="sm">
+                {(tool.status || 'active').charAt(0).toUpperCase() + (tool.status || 'active').slice(1)}
               </Badge>
             </TableCell>
             <TableCell>
               <span className="text-sm text-foreground-secondary">
-                {formatDate(tool.updated_at)}
+                {tool.updated_at ? formatDate(tool.updated_at) : 'N/A'}
               </span>
             </TableCell>
             <TableCell className="text-right">
-              <div className="flex items-center justify-end gap-2">
+              <div className="flex items-center justify-end gap-1">
                 <button
                   onClick={() => handleViewDetails(tool)}
-                  className="p-2 hover:bg-surface-hover rounded-lg transition-colors"
+                  className="p-2 sm:p-2.5 hover:bg-surface-hover rounded-lg transition-colors min-h-[44px] sm:min-h-0 min-w-[44px] sm:min-w-0 flex items-center justify-center"
                   title="View details"
+                  aria-label="View details"
                 >
                   <ExternalLink className="w-4 h-4 text-foreground-secondary hover:text-primary" />
                 </button>
                 <button
                   onClick={() => handleEdit(tool)}
-                  className="p-2 hover:bg-surface-hover rounded-lg transition-colors"
+                  className="p-2 sm:p-2.5 hover:bg-surface-hover rounded-lg transition-colors min-h-[44px] sm:min-h-0 min-w-[44px] sm:min-w-0 flex items-center justify-center"
                   title="Edit"
+                  aria-label="Edit tool"
                 >
                   <Edit className="w-4 h-4 text-foreground-secondary hover:text-primary" />
                 </button>
                 <button
                   onClick={() => handleMore(tool)}
-                  className="p-2 hover:bg-surface-hover rounded-lg transition-colors"
+                  className="p-2 sm:p-2.5 hover:bg-surface-hover rounded-lg transition-colors min-h-[44px] sm:min-h-0 min-w-[44px] sm:min-w-0 flex items-center justify-center"
                   title="More options"
+                  aria-label="More options"
                 >
                   <MoreVertical className="w-4 h-4 text-foreground-secondary hover:text-primary" />
                 </button>

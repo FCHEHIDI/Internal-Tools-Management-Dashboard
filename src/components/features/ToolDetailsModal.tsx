@@ -21,23 +21,23 @@ export function ToolDetailsModal() {
             {/* Header */}
             <div className="flex items-start gap-4">
               <div className="w-16 h-16 rounded-lg bg-gradient-primary flex items-center justify-center text-white font-bold text-2xl">
-                {tool.name.charAt(0)}
+                {tool.name?.charAt(0) || '?'}
               </div>
               <div className="flex-1">
                 <div className="flex items-center gap-2">
-                  <h3 className="text-xl font-bold text-foreground">{tool.name}</h3>
-                  <Badge status={tool.status}>
-                    {tool.status.charAt(0).toUpperCase() + tool.status.slice(1)}
+                  <h3 className="text-xl font-bold text-foreground">{tool.name || 'Unknown'}</h3>
+                  <Badge status={tool.status || 'active'}>
+                    {((tool.status || 'active').charAt(0).toUpperCase() + (tool.status || 'active').slice(1))}
                   </Badge>
                 </div>
-                <p className="text-sm text-foreground-secondary mt-1">{tool.category}</p>
+                <p className="text-sm text-foreground-secondary mt-1">{tool.category || 'N/A'}</p>
               </div>
             </div>
 
             {/* Description */}
             <div>
               <h4 className="text-sm font-semibold text-foreground mb-2">Description</h4>
-              <p className="text-sm text-foreground-secondary">{tool.description}</p>
+              <p className="text-sm text-foreground-secondary">{tool.description || 'No description available'}</p>
             </div>
 
             {/* Details Grid */}
@@ -45,21 +45,21 @@ export function ToolDetailsModal() {
               <div className="flex items-center gap-2 text-sm">
                 <DollarSign className="w-4 h-4 text-foreground-secondary" />
                 <span className="text-foreground-secondary">Monthly Cost:</span>
-                <span className="font-semibold text-foreground">{formatCurrency(tool.monthly_cost)}</span>
+                <span className="font-semibold text-foreground">{formatCurrency(tool.monthly_cost || 0)}</span>
               </div>
               <div className="flex items-center gap-2 text-sm">
                 <Users className="w-4 h-4 text-foreground-secondary" />
                 <span className="text-foreground-secondary">Active Users:</span>
-                <span className="font-semibold text-foreground">{tool.active_users_count}</span>
+                <span className="font-semibold text-foreground">{tool.active_users_count || 0}</span>
               </div>
               <div className="flex items-center gap-2 text-sm">
                 <Calendar className="w-4 h-4 text-foreground-secondary" />
                 <span className="text-foreground-secondary">Department:</span>
-                <span className="font-semibold text-foreground">{tool.owner_department}</span>
+                <span className="font-semibold text-foreground">{tool.owner_department || 'N/A'}</span>
               </div>
               <div className="flex items-center gap-2 text-sm">
                 <span className="text-foreground-secondary">Owner:</span>
-                <span className="font-semibold text-foreground">{tool.owner_id}</span>
+                <span className="font-semibold text-foreground">{tool.owner_id || 'N/A'}</span>
               </div>
             </div>
           </div>
