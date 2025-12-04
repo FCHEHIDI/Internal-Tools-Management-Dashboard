@@ -8,7 +8,7 @@ interface DataCubeSceneProps {
   className?: string;
 }
 
-export function RobotScene({ size = 1.1, autoRotate = true, className = '' }: DataCubeSceneProps) {
+export function RobotScene({ size = 1.1, className = '' }: DataCubeSceneProps) {
   return (
     <div className={className} style={{ pointerEvents: 'none' }}>
       <Canvas

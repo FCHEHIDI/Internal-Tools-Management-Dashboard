@@ -9,7 +9,7 @@ interface KPICardProps {
   title: string;
   value: string;
   trend: string;
-  gradient: 'primary' | 'success' | 'warning' | 'danger';
+  gradient: 'gold' | 'platinum' | 'sapphire' | 'ruby';
   icon: React.ReactNode;
 }
 

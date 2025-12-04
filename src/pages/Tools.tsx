@@ -6,7 +6,6 @@ import { ToolsCatalog } from '@/components/features/ToolsCatalog';
 import { ExportDialog } from '@/components/features/ExportDialog';
 import { useFiltersStore, useModalStore } from '@/stores';
 import { useTools } from '@/hooks';
-import { ExportColumn } from '@/lib/exportUtils';
 
 export function Tools() {
   const [showFilters, setShowFilters] = useState(true);
@@ -99,7 +98,7 @@ export function Tools() {
       <ExportDialog
         isOpen={showExportDialog}
         onClose={() => setShowExportDialog(false)}
-        data={toolsData?.tools || []}
+        data={toolsData?.data || []}
         availableColumns={[
           { header: 'Tool Name', key: 'name' },
           { header: 'Category', key: 'category' },

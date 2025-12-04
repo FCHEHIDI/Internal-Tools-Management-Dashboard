@@ -100,7 +100,10 @@ export function DataCube({
     // Pulsing beam
     if (beamRef.current) {
       const pulse = 0.2 + Math.sin(t * 4) * 0.15;
-      beamRef.current.material.opacity = pulse;
+      const material = beamRef.current.material as THREE.MeshBasicMaterial;
+      if (material.opacity !== undefined) {
+        material.opacity = pulse;
+      }
       beamRef.current.scale.y = 0.8 + Math.sin(t * 3) * 0.2;
     }
   });
