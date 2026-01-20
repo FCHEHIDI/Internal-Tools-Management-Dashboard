@@ -8,6 +8,7 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.6-blue)](https://www.typescriptlang.org/)
 [![Vite](https://img.shields.io/badge/Vite-5.4-purple)](https://vitejs.dev/)
 
+![Internal-Tools-Management-Dashboard](techcorp.png)
 ## 🌐 Démo en ligne
 
 **URL du projet déployé** : [https://fchehidi.github.io/Internal-Tools-Management-Dashboard/](https://fchehidi.github.io/Internal-Tools-Management-Dashboard/)
